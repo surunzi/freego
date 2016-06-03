@@ -1,0 +1,32 @@
+{
+  "name": "freego",
+  "version": "0.0.1",
+  "description": "Proxy for redirecting requests to targeted servers",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/index",
+    "testServer": "node test/server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/surunzi/freego.git"
+  },
+  "keywords": [
+    "proxy",
+    "redirect"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/surunzi/freego/issues"
+  },
+  "homepage": "https://github.com/surunzi/freego#readme",
+  "dependencies": {
+    "koa": "^1.2.0",
+    "koa-error": "^2.1.0",
+    "log4js": "^0.6.36"
+  },
+  "devDependencies": {
+    "eruda": "^0.6.3"
+  }
+}
