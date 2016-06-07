@@ -13,7 +13,7 @@ module.exports = function (options)
         if (!userId)
         {
             userId = util.randomId();
-            this.cookies.set(USER_ID_COOKIE_NAME, {
+            this.cookies.set(USER_ID_COOKIE_NAME, userId, {
                 httpOnly: true,
                 expires: new Date(Date.now() + EXPIRES)
             });
@@ -22,7 +22,7 @@ module.exports = function (options)
         this.userId = userId;
         this.id = util.guid();
         this.logger = logger.create(this.id, userId);
-        this.logger.info('Request url: ' + decodeURIComponent(this.href));
+        this.logger.info('request url: ' + decodeURIComponent(this.href));
 
         yield next;
     };
