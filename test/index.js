@@ -1,12 +1,22 @@
 const freeGo = require('../index');
 
 freeGo({
-    port: 13191,
+    port: 80,
     processTitle: 'localhostProxy',
     proxy: {
+        localhost: {
+            pattern: /http:\/\/localhost\/favicon.ico/,
+            target: [
+                {
+                    name: 'localhost',
+                    ip: '127.0.0.1',
+                    port: 13192
+                }
+            ]
+        },
         localhostDean: {
-            pattern: /http:\/\/localhost:13191\/dean/,
-            path: '/dean',
+            pattern: /http:\/\/localhost\/dean\//,
+            path: '/dean/',
             target: [
                 {
                     name: 'DeanOne',
@@ -26,8 +36,8 @@ freeGo({
             ]
         },
         localhostSam: {
-            pattern: /http:\/\/localhost:13191\/sam/,
-            path: '/sam',
+            pattern: /http:\/\/localhost\/sam\//,
+            path: '/sam/',
             target: [
                 {
                     name: 'SamOne',

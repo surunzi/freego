@@ -1,4 +1,9 @@
 appenders
+eruda
 freego
+guid
+mkdirp
 stdout
+ungzip
 yyyy
+zlib

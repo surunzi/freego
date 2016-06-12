@@ -1,0 +1,26 @@
+<script>
+    var freeGoProxy = JSON.parse('{{{target}}}'),
+        freeGoDomain = '{{domain}}',
+        freeGoPath = '{{path}}',
+        freeGoIdentifier = '{{id}}',
+        freeGoGuid = '{{guid}}';
+</script>
+<script>
+    function getIEVersion()
+    {
+        var sAgent = window.navigator.userAgent;
+        var Idx = sAgent.indexOf("MSIE");
+        if (Idx > 0) return parseInt(sAgent.substring(Idx+ 5, sAgent.indexOf(".", Idx)));
+        else if (!!navigator.userAgent.match(/Trident\/7\./)) return 11;
+
+        return 0;
+    }
+    if (getIEVersion() === 0)
+    {
+        var erudaSrc = '{{path}}free_go_proxy/public/eruda.min.js';
+        document.write('<scr' + 'ipt src="' + erudaSrc + '"></scr' + 'ipt>');
+        document.write('<scr' + 'ipt >eruda.init();</scr' + 'ipt>');
+        var freeGoSrc = '{{path}}free_go_proxy/public/eruda-freego.js';
+        document.write('<scr' + 'ipt src="' + freeGoSrc + '"></scr' + 'ipt>');
+    }
+</script>

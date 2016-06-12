@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node test/index",
+    "updateEruda": "npm update eruda --save-dev && cp node_modules/eruda/dist/eruda.min.js public/",
     "testServer": "node test/server"
   },
   "repository": {
@@ -22,9 +23,17 @@
   },
   "homepage": "https://github.com/surunzi/freego#readme",
   "dependencies": {
+    "co": "^4.6.0",
+    "co-fs": "^1.2.0",
+    "handlebars": "^4.0.5",
+    "ip-filter": "^1.0.2",
     "koa": "^1.2.0",
     "koa-error": "^2.1.0",
-    "log4js": "^0.6.36"
+    "koa-router": "^5.4.0",
+    "koa-send": "^3.2.0",
+    "log4js": "^0.6.36",
+    "mkdirp": "^0.5.1",
+    "zlib": "^1.0.5"
   },
   "devDependencies": {
     "eruda": "^0.6.3"

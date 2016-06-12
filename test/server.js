@@ -15,7 +15,19 @@ function createServer(name, port)
 {
     http.createServer(function (req, res)
     {
-        res.end(`This is ${name} at ${port}.`);
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.end(`
+            <html>
+                <head>
+                    <meta charset="utf-8">
+                    <title>FreeGo</title>
+                    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+                </head>
+                <body>
+                    This is ${name} at ${port}.
+                </body>
+            </html>
+        `);
     }).listen(port, function ()
     {
         console.log(`Server ${name} listening on: http://localhost: ${port}`);

@@ -1,0 +1,10 @@
+/.idea/
+/node_modules/
+/log/
+/dev/
+/eustia/
+/test/
+/script/
+.eustia
+.gitignore
+.npmignore

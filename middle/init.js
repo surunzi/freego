@@ -4,7 +4,10 @@ var util = require('../lib/util');
 
 module.exports = function (options)
 {
-    var logger = options.logger;
+    var logger = options.logger,
+        proxy = options.proxy,
+        proxyKeys = util.keys(proxy),
+        proxyLen = proxyKeys.length;
 
     return function *(next)
     {
@@ -12,7 +15,7 @@ module.exports = function (options)
 
         if (!userId)
         {
-            userId = util.randomId();
+            userId = randomId();
             this.cookies.set(USER_ID_COOKIE_NAME, userId, {
                 httpOnly: true,
                 expires: new Date(Date.now() + EXPIRES)
@@ -20,13 +23,58 @@ module.exports = function (options)
         }
 
         this.userId = userId;
-        this.id = util.guid();
+        this.id = guid();
+
         this.logger = logger.create(this.id, userId);
-        this.logger.info('request url: ' + decodeURIComponent(this.href));
+        this.logger.info(`request url: ${decodeURIComponent(this.href)}`);
+
+        this.logger.info(`client ip: ${this.ip}`);
+
+        var target = this.target = getTarget(this);
+        if (!target)
+        {
+            this.cookies.set('free_go_proxy');
+            this.status = 302;
+            return this.set('location', this.href);
+        }
+
+        this.logger.info(`forward address: ${target.ip}:${target.port}(${target.name})`);
 
         yield next;
     };
+
+    function getTarget(ctx)
+    {
+        var href = ctx.href,
+            cookies = ctx.cookies,
+            index = +(cookies.get('free_go_proxy') || 0);
+
+        for (var i = 0; i < proxyLen; i++)
+        {
+            var p = proxy[proxyKeys[i]];
+
+            if (p.pattern.test(href)) break;
+        }
+
+        if (i === proxyLen) return;
+
+        var target = p.target[index] || p.target[0];
+
+        return {
+            ip: target.ip,
+            name: target.name,
+            port: target.port,
+            domain: p.domain || ctx.host,
+            path: p.path || '/',
+            root: p
+        };
+    }
 };
 
 const EXPIRES = 3600 * 24 * 30 * 1000;
 const USER_ID_COOKIE_NAME = 'freego_id';
+
+var s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+var guid = () => s4() + s4();
+
+var randomId = () => '' + (100000 + Math.floor(Math.random() * 900000));

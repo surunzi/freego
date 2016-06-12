@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>FreeGo</title>
+    <style>
+        * {
+            font-family: 'Avenir Next', Avenir, 'Helvetica Neue', Helvetica, 'Franklin Gothic Medium', 'Franklin Gothic', 'ITC Franklin Gothic', Arial, sans-serif;
+        }
+        body {
+            background: #b4bad2;
+            text-align: center;
+        }
+        .title {
+            text-align: center;
+            color: #fff;
+            margin-top: 100px;
+        }
+        #toggle-btn {
+            background: #b4b4b4;
+            color: #fff;
+            padding: 15px 20px;
+            outline: none;
+            border: 1px solid #fff;
+        }
+        #toggle-btn.active {
+            background: #528DCD;
+        }
+        .msg {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h1 class="title">FreeGo</h1>
+{{#if target}}
+    <button id="toggle-btn">Toggle FreeGo:)</button>
+    <script>
+        var isEnable = false;
+
+        if (document.cookie.indexOf('free_go_proxy=') > -1) isEnable = true;
+
+        var btn = document.getElementById('toggle-btn');
+        if (isEnable) btn.className += ' active';
+
+        var cookie = 'free_go_proxy=0;domain={{target.domain}};path={{target.path}};expires=';
+
+        btn.onclick = function ()
+        {
+            cookie += getExpires(isEnable ? -1 : 30);
+            document.cookie = cookie;
+            location.reload();
+        };
+
+        function getExpires(date)
+        {
+            var expires = new Date();
+            expires.setMilliseconds(expires.getMilliseconds() + date * 864e+5);
+
+            return expires.toUTCString();
+        }
+    </script>
+{{else}}
+    <div class="msg">Sorry, this url doesn't have a configuration yet.</div>
+{{/if}}
+</body>
+</html>
