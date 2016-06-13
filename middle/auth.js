@@ -1,18 +1,29 @@
 var ipFilter = require('ip-filter');
 
-var readTpl = require('../lib/util');
+var readTpl = require('../lib/readTpl');
 
 module.exports = function (options)
 {
-    var ipPattern = options.ip;
+    var ipPattern = options.ip,
+        password = options.password;
 
     return function *(next)
     {
+        if (!this.target)
+        {
+            this.cookies.set('free_go_proxy');
+            this.status = 302;
+            return this.set('location', this.href);
+        }
+
         var logger = this.logger;
 
         logger.info('user authentication');
 
-        if (!ipFilter(this.ip, ipPattern, true))
+        var ipNotAllowed = !ipFilter(this.ip, ipPattern, true),
+            noCorrectPass = !(password && this.cookies.get('free_go_password') === password);
+
+        if (ipNotAllowed && noCorrectPass)
         {
             logger.warn(`ip ${this.ip} is blocked`);
 
@@ -20,7 +31,8 @@ module.exports = function (options)
             var tpl = yield readTpl('block');
             this.body = tpl({
                 ip: this.ip,
-                target: this.target
+                target: this.target,
+                password: password
             });
             return;
         }

@@ -2,6 +2,7 @@ var path = require('path'),
     fs = require('co-fs');
 
 var util = require('../lib/util'),
+    readTpl = require('../lib/readTpl'),
     mkdirp = require('../lib/mkdirp');
 
 module.exports = function (options)
@@ -12,28 +13,31 @@ module.exports = function (options)
     {
         yield* next;
 
+        if (logPath === 'stdout') return;
+
         this.logger.info('Save result');
 
-        var data = '';
+        var resultRes = this.resultRes;
 
-        var resultRes = this.resultRes,
-            protocol = this.protocol.toUpperCase();
-
-        data += this.method + ' ' + this.href + ' ' + protocol + '\n';
-        util.each(this.req.headers, (val, key) => data += key + ': ' + val + '\n');
-
-        data += '\n' + protocol + ' ' + this.status + '\n';
-        util.each(resultRes.headers, (val, key) => data += key + ': ' + val + '\n');
-
-        data += '\n' + resultRes.body;
+        var httpTpl = yield readTpl('http');
+        var data = httpTpl({
+            method: this.method,
+            href: this.href,
+            protocol: this.protocol.toUpperCase(),
+            reqHeaders: this.req.headers,
+            reqBody: this.reqBody,
+            status: this.status,
+            resHeaders: resultRes.headers,
+            resBody: resultRes.body
+        });
 
         var saveDir = path.resolve(logPath, getDate());
         yield mkdirp(saveDir);
 
-        var savePath = path.resolve(saveDir, this.guid + '.txt');
+        var savePath = path.resolve(saveDir, this.id + '.txt');
         yield fs.writeFile(savePath, data);
 
-        this.logger.info('request is saved to ' + savePath);
+        this.logger.info(`request is saved to ${savePath}`);
     };
 };
 

@@ -2,29 +2,32 @@ var http = require('http');
 
 var util = require('../lib/util');
 
-module.exports = function ()
+module.exports = function (options)
 {
+    var filterType = options.filterType;
+
     return function *(next)
     {
-        this.logger.info('forward request');
+        var target = this.target;
 
-        var target = this.target,
-            req = this.req;
+        this.logger.info(`forward address: ${target.ip}:${target.port}(${target.name})`);
 
-        this.targetRes = yield request({
+        var req = this.req;
+
+        this.targetRes = yield request.call(this, {
             port: target.port,
             hostname: target.ip,
             path: this.originalUrl,
             method: req.method,
             headers: req.headers
-        }, this);
+        });
 
         if (this.targetRes.done) return;
 
         yield next;
     };
 
-    function request(options, ctx)
+    function request(options)
     {
         return new Promise((resolve, reject) =>
         {
@@ -34,18 +37,17 @@ module.exports = function ()
             {
                 var contentType = proxyRes.headers['content-type'];
 
-                var html = util.isHtml(contentType),
-                    json = isJson(contentType);
-
                 // If the response is not html, we just pipe it back immediately.
-                ctx.status = proxyRes.statusCode;
-                if (!html && !json)
+                this.status = proxyRes.statusCode;
+
+                var pipeBackImmediately = !(contentType && filterType.some(val => contentType.indexOf(val) > -1));
+                if (pipeBackImmediately)
                 {
-                    util.each(proxyRes.headers, (val, key) => ctx.set(key, val));
-                    proxyRes.pipe(ctx.res);
+                    util.each(proxyRes.headers, (val, key) => this.set(key, val));
+                    proxyRes.pipe(this.res);
                     proxyRes.on('data', () => {});
                     proxyRes.on('end', () => {
-                        ctx.res.end();
+                        this.res.end();
                         resolve({done: true});
                     });
                     return;
@@ -60,11 +62,16 @@ module.exports = function ()
                 }));
             });
 
-            proxyReq.on('error', (err) => reject(err));
+            var body = [];
+            this.req.on('data', chunk => body.push(chunk))
+                    .on('end', () =>
+                    {
+                        body = Buffer.concat(body).toString();
+                        this.reqBody = body;
+                    });
 
-            ctx.req.pipe(proxyReq);
+            proxyReq.on('error', (err) => reject(err));
+            this.req.pipe(proxyReq);
         });
     }
 };
-
-var isJson = contentType => contentType && contentType.toLowerCase().indexOf('application/json') > -1;

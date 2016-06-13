@@ -30,15 +30,7 @@ module.exports = function (options)
 
         this.logger.info(`client ip: ${this.ip}`);
 
-        var target = this.target = getTarget(this);
-        if (!target)
-        {
-            this.cookies.set('free_go_proxy');
-            this.status = 302;
-            return this.set('location', this.href);
-        }
-
-        this.logger.info(`forward address: ${target.ip}:${target.port}(${target.name})`);
+        this.target = getTarget(this);
 
         yield next;
     };
@@ -72,7 +64,7 @@ module.exports = function (options)
 };
 
 const EXPIRES = 3600 * 24 * 30 * 1000;
-const USER_ID_COOKIE_NAME = 'freego_id';
+const USER_ID_COOKIE_NAME = 'free_go_id';
 
 var s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
 var guid = () => s4() + s4();

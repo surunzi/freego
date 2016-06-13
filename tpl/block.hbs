@@ -7,49 +7,118 @@
     <style>
         * {
             font-family: 'Avenir Next', Avenir, 'Helvetica Neue', Helvetica, 'Franklin Gothic Medium', 'Franklin Gothic', 'ITC Franklin Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         body {
-            background: #b4bad2;
+            background: #ebebeb;
+        }
+        header {
+            background: #fff;
+            padding: 60px 0 50px 0;
+        }
+        header .title {
             text-align: center;
+            color: #d55;
+            font-size: 40px;
+            margin-bottom: 20px;
         }
-        .title {
-            margin-top: 100px;
-            color: #fff;
+        header p {
+            text-align: center;
+            font-size: 16px;
+            line-height: 25px;
         }
-        #clear-btn {
-            margin-top: 20px;
-            background: #b4b4b4;
+        a {
+            color: #d55;
+        }
+        .container {
+            border-radius: 4px;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            margin: 20px 10px;
+        }
+        .ip-blocked p {
+            float: left;
+            font-size: 14px;
+            line-height: 18px;
+        }
+        .ip-blocked .ip {
+            color: #d55;
+        }
+        .btn {
+            border: none;
+            background: #d55;
+            border-radius: 4px;
             color: #fff;
-            padding: 15px 20px;
+            padding: 10px 20px;
+            font-weight: bold;
             outline: none;
-            border: 1px solid #fff;
+        }
+        #clear-btn, #confirm-btn {
+            float: right;
+        }
+        #password {
+            background: #ebebeb;
+            border: #7d7d7d;
+            border-radius: 4px;
+            padding: 10px;
+            width: 100%;
+            display: block;
+            margin-bottom: 10px;
+            outline: none;
         }
     </style>
+    <script>
+        function getExpires(date)
+        {
+            var expires = new Date();
+            expires.setMilliseconds(expires.getMilliseconds() + date * 864e+5);
+
+            return expires.toUTCString();
+        }
+    </script>
 </head>
 <body>
-<h1 class="title">FreeGo</h1>
-<div class="msg">
-    Your Ip {{ip}} is Blocked! <br/><br/>
-    Get Out of Here!
-</div>
-<button id="clear-btn">OK</button>
-<script>
-    var btn = document.getElementById('clear-btn'),
+<header>
+    <h1 class="title">FreeGo</h1>
+    <p>
+        Proxy for Redirecting Requests<br/>
+        View it on <a href="https://github.com/surunzi/freego">GitHub</a>
+    </p>
+</header>
+<div class="container ip-blocked">
+    <p>IP <span class="ip">{{ip}}</span><br/>is blocked!</p>
+    <button id="clear-btn" class="btn">Leave</button>
+    <script>
+        var clearBtn = document.getElementById('clear-btn'),
             cookie = 'free_go_proxy=0;domain={{target.domain}};path={{target.path}};expires=' + getExpires(-1);
 
-    btn.addEventListener('click', function ()
+        clearBtn.onclick = function ()
+        {
+            document.cookie = cookie;
+            location.reload();
+        };
+    </script>
+</div>
+{{#if password}}
+<div class="container">
+    <input id="password" type="password" placeholder="Password"/>
+    <button id="confirm-btn" class="btn">Confirm</button>
+</div>
+<script>
+    var confirmBtn = document.getElementById('confirm-btn');
+
+    confirmBtn.onclick = function ()
     {
-        document.cookie = cookie;
+        var password = document.getElementById('password').value;
+
+        document.cookie = 'free_go_password=' + password + ';domain={{target.domain}};path={{target.path}};expires=' + getExpires(30);
         location.reload();
-    }, false);
-
-    function getExpires(date)
-    {
-        var expires = new Date();
-        expires.setMilliseconds(expires.getMilliseconds() + date * 864e+5);
-
-        return expires.toUTCString();
-    }
+    };
 </script>
+{{/if}}
 </body>
 </html>

@@ -1,67 +1,28 @@
-var co = require('co'),
-    fs = require('fs'),
-    handlebars = require('handlebars');
-
-var readTpl = require('../lib/readTpl'),
-    util = require('../lib/util'),
-    ungzip = require('../lib/ungzip');
-
-module.exports = function ()
+module.exports = function (options)
 {
+    var filter = options.filter;
+
     return function *(next)
     {
-        this.logger.info('Process response');
+        this.logger.info('filter response');
 
         var targetRes = this.targetRes,
             headers = targetRes.headers,
             body = targetRes.body;
+
+        for (var i = 0, len = filter.length; i < len; i++)
+        {
+            var ret = yield filter[i].call(this, headers, body);
+
+            headers = ret.headers;
+            body = ret.body;
+        }
 
         this.resultRes = {
             headers: headers,
             body: body
         };
 
-        var isHtml = util.isHtml(headers['content-type']);
-
-        if (!isHtml) return yield next;
-
-        yield injectEruda({
-            resultRes: this.resultRes,
-            target: this.target,
-            id: this.id,
-            guid: this.guid
-        });
-
         yield next;
     };
 };
-
-var injectEruda = co.wrap(function *injectEruda(options)
-{
-    var resultRes = options.resultRes,
-        target = options.target,
-        headers = resultRes.headers,
-        body = resultRes.body;
-
-    if (headers['content-encoding'] === 'gzip')
-    {
-        delete headers['content-encoding'];
-        body = yield ungzip(body);
-    }
-    body = String(body);
-
-    var injectStr = '';
-
-    var erudaTpl = yield readTpl('eruda');
-    injectStr += erudaTpl({
-        target: JSON.stringify(target.root.target),
-        id: options.id,
-        domain: target.domain,
-        guid: options.guid,
-        path: target.path
-    });
-
-    body = body.replace('</body>', (match) => injectStr + match);
-
-    resultRes.body = body;
-});

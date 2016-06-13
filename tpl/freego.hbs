@@ -7,62 +7,135 @@
     <style>
         * {
             font-family: 'Avenir Next', Avenir, 'Helvetica Neue', Helvetica, 'Franklin Gothic Medium', 'Franklin Gothic', 'ITC Franklin Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #7d7d7d;
+            -webkit-user-select: none;
+        }
+        a {
+            color: #d55;
         }
         body {
-            background: #b4bad2;
-            text-align: center;
+            background: #ebebeb;
         }
-        .title {
+        header {
+            background: #fff;
+            padding: 60px 0 50px 0;
+        }
+        header .title {
             text-align: center;
+            color: #d55;
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+        header p {
+            text-align: center;
+            font-size: 16px;
+            line-height: 25px;
+        }
+        .container {
+            padding: 20px 10px;
+        }
+        .container .content {
+            background: #fff;
+            border-radius: 4px;
+            padding: 20px;
+            font-size: 14px;
+            line-height: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            border: 1px solid #7d7d7d;
+        }
+        table td, table th {
+            padding: 10px;
+        }
+        thead {
+            background: #7d7d7d;
+            text-align: left;
+        }
+        thead th {
             color: #fff;
-            margin-top: 100px;
         }
-        #toggle-btn {
-            background: #b4b4b4;
+        tbody tr {
+            transition: background .3s;
+        }
+        tbody tr:active, tbody tr.active {
+            background: #d55;
+        }
+        tbody td {
+            transition: color .3s;
+        }
+        tbody tr:active td, tbody tr.active td {
             color: #fff;
-            padding: 15px 20px;
-            outline: none;
-            border: 1px solid #fff;
-        }
-        #toggle-btn.active {
-            background: #528DCD;
-        }
-        .msg {
-            text-align: center;
         }
     </style>
 </head>
 <body>
-<h1 class="title">FreeGo</h1>
-{{#if target}}
-    <button id="toggle-btn">Toggle FreeGo:)</button>
-    <script>
-        var isEnable = false;
+<header>
+    <h1 class="title">FreeGo</h1>
+    <p>
+        Proxy for Redirecting Requests<br/>
+        View it on <a href="https://github.com/surunzi/freego">GitHub</a>
+    </p>
+</header>
+<div class="container">
+    <div class="content">
+        {{#if target}}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>IP:Port</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each target.root.target}}
+                        <tr id="target{{@index}}" ontouchstart>
+                            <td>{{name}}</td>
+                            <td>{{ip}}:{{port}}</td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            <script>
+                var len = {{target.root.target.length}};
 
-        if (document.cookie.indexOf('free_go_proxy=') > -1) isEnable = true;
+                for (var i = 0; i < len; i++) init(i);
 
-        var btn = document.getElementById('toggle-btn');
-        if (isEnable) btn.className += ' active';
+                function init(num)
+                {
+                    var isEnable = false;
 
-        var cookie = 'free_go_proxy=0;domain={{target.domain}};path={{target.path}};expires=';
+                    if (document.cookie.indexOf('free_go_proxy=' + num) > -1) isEnable = true;
 
-        btn.onclick = function ()
-        {
-            cookie += getExpires(isEnable ? -1 : 30);
-            document.cookie = cookie;
-            location.reload();
-        };
+                    var target = document.getElementById('target' + num);
+                    if (isEnable) target.className += ' active';
 
-        function getExpires(date)
-        {
-            var expires = new Date();
-            expires.setMilliseconds(expires.getMilliseconds() + date * 864e+5);
+                    var cookie = 'free_go_proxy=' + num +';domain={{target.domain}};path={{target.path}};expires=';
 
-            return expires.toUTCString();
-        }
-    </script>
-{{else}}
-    <div class="msg">Sorry, this url doesn't have a configuration yet.</div>
-{{/if}}
+                    target.onclick = function ()
+                    {
+                        cookie += getExpires(isEnable ? -1 : 30);
+                        document.cookie = cookie;
+                        location.reload();
+                    };
+                }
+
+                function getExpires(date)
+                {
+                    var expires = new Date();
+                    expires.setMilliseconds(expires.getMilliseconds() + date * 864e+5);
+
+                    return expires.toUTCString();
+                }
+            </script>
+        {{else}}
+            Sorry, this url doesn't have a configuration yet:(
+        {{/if}}
+    </div>
+</div>
 </body>
 </html>

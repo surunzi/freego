@@ -1,8 +1,11 @@
-const freeGo = require('../index');
+var freeGo = require('../index'),
+    path = require('path');
 
 freeGo({
     port: 80,
     processTitle: 'localhostProxy',
+    logPath: path.resolve(__dirname, '../log'),
+    password: 'freego',
     proxy: {
         localhost: {
             pattern: /http:\/\/localhost\/favicon.ico/,

@@ -4,7 +4,7 @@ var koa = require('koa'),
 
 var init = require('./middle/init'),
     resTime = require('./middle/resTime'),
-    staticFile = require('./middle/staticFile'),
+    staticFile = require('./middle/static'),
     router = require('./middle/router'),
     auth = require('./middle/auth'),
     forward = require('./middle/forward'),
@@ -35,10 +35,15 @@ module.exports = function (config)
        .use(staticFile())
        .use(router())
        .use(auth({
-           ip: config.ip
+           ip: config.ip,
+           password: config.password
        }))
-       .use(forward())
-       .use(filter())
+       .use(forward({
+           filterType: config.filterType
+       }))
+       .use(filter({
+           filter: config.filter
+       }))
        .use(send())
        .use(save({
            logPath: config.logPath

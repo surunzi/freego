@@ -1,0 +1,13 @@
+{{{method}}} {{{href}}} {{{protocol}}}
+{{#each reqHeaders}}
+{{{@key}}}: {{{.}}}
+{{/each}}
+
+{{{reqBody}}}
+
+{{{protocol}}} {{{status}}}
+{{#each resHeaders}}
+{{{@key}}}: {{{.}}}
+{{/each}}
+
+{{{resBody}}}
