@@ -62,13 +62,16 @@ module.exports = function (options)
                 }));
             });
 
-            var body = [];
-            this.req.on('data', chunk => body.push(chunk))
+            if (this.req.method === 'post')
+            {
+                var body = [];
+                this.req.on('data', chunk => body.push(chunk))
                     .on('end', () =>
                     {
                         body = Buffer.concat(body).toString();
-                        this.reqBody = body;
+                        if (body.trim() !== '') this.reqBody = `\n${body}\n`;
                     });
+            }
 
             proxyReq.on('error', (err) => reject(err));
             this.req.pipe(proxyReq);

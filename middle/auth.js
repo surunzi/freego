@@ -18,8 +18,6 @@ module.exports = function (options)
 
         var logger = this.logger;
 
-        logger.info('user authentication');
-
         var ipNotAllowed = !ipFilter(this.ip, ipPattern, true),
             noCorrectPass = !(password && this.cookies.get('free_go_password') === password);
 

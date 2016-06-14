@@ -15,8 +15,6 @@ module.exports = function (options)
 
         if (logPath === 'stdout') return;
 
-        this.logger.info('Save result');
-
         var resultRes = this.resultRes;
 
         var httpTpl = yield readTpl('http');

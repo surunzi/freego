@@ -4,8 +4,6 @@ module.exports = function (options)
 
     return function *(next)
     {
-        this.logger.info('filter response');
-
         var targetRes = this.targetRes,
             headers = targetRes.headers,
             body = targetRes.body;

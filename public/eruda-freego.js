@@ -6,13 +6,13 @@
 
     util.evalCss([
         '.eruda-freego {font-size: 14px; padding-bottom: 40px;}',
-        '.eruda-main-wrapper {height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch;} ',
+        '.eruda-main-wrapper {height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 40px;} ',
         '.eruda-table-wrapper {margin: 20px 10px; border-radius: 4px; overflow: hidden; box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .05), 0 1px 4px 0 rgba(0, 0, 0, .08), 0 3px 1px -2px rgba(0, 0, 0, .2);}',
         'table {width: 100%; border-collapse: collapse; margin: 0;}',
-        'tr {margin: 10px 0; background: #fff; transition: background .3s, color .3s;}',
+        'tr {margin: 10px 0; background: #fff; transition: background .3s, color .3s; cursor: pointer;}',
         'tr.active, tr:active {background: #d55; color: #fff;}',
         'td {padding: 10px;}',
-        '.eruda-logout {border-top: 1px solid #ebebeb; background: #fff; text-align:center; padding: 10px; color: #7b7b7b; transition: background .3s, color .3s;}',
+        '.eruda-logout {border-top: 1px solid #ebebeb; background: #fff; text-align:center; padding: 10px; color: #7b7b7b; transition: background .3s, color .3s; cursor: pointer;}',
         '.eruda-logout:active {background: #d55; color: #fff;}',
         '.eruda-id {width: 100%; margin-top: 10px; background: #d55; color: #fff; text-align: center; position: absolute; left: 0; bottom: 0; height: 40px; line-height: 40px;}'
     ].join('.eruda-freego '));

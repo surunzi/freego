@@ -2,9 +2,7 @@
 {{#each reqHeaders}}
 {{{@key}}}: {{{.}}}
 {{/each}}
-
-{{{reqBody}}}
-
+{{#if reqBody}}{{{reqBody}}}{{/if}}
 {{{protocol}}} {{{status}}}
 {{#each resHeaders}}
 {{{@key}}}: {{{.}}}
