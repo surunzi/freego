@@ -1,6 +1,6 @@
 {
   "name": "freego",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Proxy for redirecting requests to targeted servers",
   "main": "index.js",
   "scripts": {
@@ -32,8 +32,7 @@
     "koa-router": "^5.4.0",
     "koa-send": "^3.2.0",
     "log4js": "^0.6.36",
-    "mkdirp": "^0.5.1",
-    "zlib": "^1.0.5"
+    "mkdirp": "^0.5.1"
   },
   "devDependencies": {
     "eruda": "^0.6.3"
