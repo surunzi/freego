@@ -2,13 +2,13 @@ var freeGo = require('../index'),
     path = require('path');
 
 freeGo({
-    port: 80,
-    processTitle: 'localhostProxy',
+    port: 13191,
     logPath: path.resolve(__dirname, '../log'),
     password: 'freego',
+    ip: ['127.0.0.1'],
     proxy: {
-        localhost: {
-            pattern: /http:\/\/localhost\/favicon.ico/,
+        freeGo: {
+            pattern: /http:\/\/freego\.com\/favicon.ico/,
             target: [
                 {
                     name: 'localhost',
@@ -17,8 +17,8 @@ freeGo({
                 }
             ]
         },
-        localhostDean: {
-            pattern: /http:\/\/localhost\/dean\//,
+        freeGoDean: {
+            pattern: /http:\/\/freego\.com\/dean\//,
             path: '/dean/',
             target: [
                 {
@@ -38,8 +38,8 @@ freeGo({
                 }
             ]
         },
-        localhostSam: {
-            pattern: /http:\/\/localhost\/sam\//,
+        freeGoSam: {
+            pattern: /http:\/\/freego\.com\/sam\//,
             path: '/sam/',
             target: [
                 {

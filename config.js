@@ -6,7 +6,6 @@ var ungzip = require('./filter/ungzip'),
 
 module.exports = {
     port: 3000,
-    processTitle: 'freego',
     logPath: 'stdout',
     filterType: ['text/html', 'application/json'],
     filter: [
