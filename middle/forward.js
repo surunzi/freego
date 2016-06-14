@@ -62,7 +62,7 @@ module.exports = function (options)
                 }));
             });
 
-            if (this.req.method === 'post')
+            if (this.req.method === 'POST')
             {
                 var body = [];
                 this.req.on('data', chunk => body.push(chunk))

@@ -59,7 +59,7 @@
             });
 
             tpl += '</tbody></table>';
-            tpl += '<div class="eruda-logout">Log out</div>';
+            tpl += '<div class="eruda-logout" ontouchstart>Log out</div>';
             tpl += '</div></div>';
 
             tpl += '<div class="eruda-id">ID: ' + this._id + ' USER: ' + this._userId + '</div>';
