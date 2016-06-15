@@ -1,6 +1,6 @@
 {
   "name": "freego",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Proxy for redirecting requests to targeted servers",
   "main": "index.js",
   "scripts": {

@@ -88,14 +88,12 @@
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>IP:Port</th>
                     </tr>
                 </thead>
                 <tbody>
                     {{#each target.root.target}}
                         <tr id="target{{@index}}" ontouchstart>
                             <td>{{name}}</td>
-                            <td>{{ip}}:{{port}}</td>
                         </tr>
                     {{/each}}
                 </tbody>
