@@ -15,6 +15,8 @@ function createServer(name, port)
 {
     http.createServer(function (req, res)
     {
+        var url = 'http://' + req.headers['host'] + req.url;
+
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         res.end(`
             <html>
@@ -24,7 +26,7 @@ function createServer(name, port)
                     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
                 </head>
                 <body>
-                    This is ${name} at ${port}.
+                    This is ${name} at ${port}, url: ${url}.
                 </body>
             </html>
         `);

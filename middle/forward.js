@@ -4,22 +4,25 @@ var util = require('../lib/util');
 
 module.exports = function (options)
 {
-    var filterType = options.filterType;
+    var filterType = options.filterType,
+        forwardId = options.forwardId;
 
     return function *(next)
     {
-        var target = this.target;
+        var target = this.target,
+            req = this.req,
+            path = this.originalUrl;
 
         this.logger.info(`forward address: ${target.ip}:${target.port}(${target.name})`);
 
-        var req = this.req;
+        if (forwardId) path = util.addQuery(path, 'freego', this.id);
 
         this.targetRes = yield request.call(this, {
             port: target.port,
             hostname: target.ip,
-            path: this.originalUrl,
             method: req.method,
-            headers: req.headers
+            headers: req.headers,
+            path
         });
 
         if (this.targetRes.done) return;

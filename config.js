@@ -1,5 +1,3 @@
-var path = require('path');
-
 var ungzip = require('./filter/ungzip'),
     eruda = require('./filter/eruda'),
     noCache = require('./filter/noCache');
@@ -7,6 +5,7 @@ var ungzip = require('./filter/ungzip'),
 module.exports = {
     port: 3000,
     logPath: 'stdout',
+    forwardId: false,
     filterType: ['text/html', 'application/json'],
     filter: [
         ungzip(),
