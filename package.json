@@ -1,6 +1,6 @@
 {
   "name": "freego",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Proxy for redirecting requests to targeted servers",
   "main": "index.js",
   "scripts": {
@@ -35,6 +35,6 @@
     "mkdirp": "^0.5.1"
   },
   "devDependencies": {
-    "eruda": "^0.6.3"
+    "eruda": "^0.7.0"
   }
 }
