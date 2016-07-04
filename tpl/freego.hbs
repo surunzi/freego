@@ -61,9 +61,10 @@
         }
         tbody tr {
             transition: background .3s;
+            cursor: pointer;
         }
         tbody tr:active, tbody tr.active {
-            background: #d55;
+            background: #02B4A9;
         }
         tbody td {
             transition: color .3s;
@@ -118,7 +119,11 @@
                     {
                         cookie += getExpires(isEnable ? -1 : 30);
                         document.cookie = cookie;
-                        location.reload();
+                        {{#if target.autoJump}}
+                            location.replace('{{target.autoJumpUrl}}');
+                        {{else}}
+                            location.reload();
+                        {{/if}}
                     };
                 }
 

@@ -21,6 +21,7 @@ freeGo({
         freeGoDean: {
             pattern: /http:\/\/freego\.com\/dean\//,
             path: '/dean/',
+            autoJump: true,
             target: [
                 {
                     name: 'DeanOne',

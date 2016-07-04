@@ -11,10 +11,10 @@
         'table {width: 100%; border-collapse: collapse; margin: 0;}',
         'tr {margin: 10px 0; background: #fff; transition: background .3s, color .3s; cursor: pointer;}',
         'tr.active,',
-        'tr:active {background: #d55; color: #fff;}',
+        'tr:active {background: #02B4A9; color: #fff;}',
         'td {padding: 10px;}',
-        '.eruda-logout {border-top: 1px solid #ebebeb; background: #fff; text-align:center; padding: 10px; color: #7b7b7b; transition: background .3s, color .3s; cursor: pointer;}',
-        '.eruda-logout:active {background: #d55; color: #fff;}',
+        '.eruda-logout {border-top: 1px solid #ebebeb; background: #d55; text-align:center; padding: 10px; color: #fff; transition: background .3s, color .3s; cursor: pointer;}',
+        '.eruda-logout:active {background: #aa4240; color: #fff;}',
         '.eruda-id {width: 100%; margin-top: 10px; background: #d55; color: #fff; text-align: center; position: absolute; left: 0; bottom: 0; height: 40px; line-height: 40px;}'
     ].join('.eruda-freego '));
 
