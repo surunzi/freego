@@ -35,6 +35,6 @@
     "mkdirp": "^0.5.1"
   },
   "devDependencies": {
-    "eruda": "^1.0.3"
+    "eruda": "^1.0.4"
   }
 }
