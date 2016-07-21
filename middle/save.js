@@ -3,7 +3,8 @@ var path = require('path'),
 
 var util = require('../lib/util'),
     readTpl = require('../lib/readTpl'),
-    mkdirp = require('../lib/mkdirp');
+    mkdirp = require('../lib/mkdirp'),
+    io = require('../lib/socketMgr');
 
 module.exports = function (options)
 {
@@ -12,8 +13,6 @@ module.exports = function (options)
     return function *(next)
     {
         yield* next;
-
-        if (logPath === 'stdout') return;
 
         var resultRes = this.resultRes;
 
@@ -28,6 +27,8 @@ module.exports = function (options)
             resHeaders: resultRes.headers,
             resBody: resultRes.body
         });
+
+        if (logPath === 'stdout') return;
 
         var saveDir = path.resolve(logPath, getDate());
         yield mkdirp(saveDir);

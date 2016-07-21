@@ -1,6 +1,7 @@
 var koa = require('koa'),
     path = require('path'),
-    error = require('koa-error');
+    error = require('koa-error'),
+    net = require('net');
 
 var init = require('./middle/init'),
     resTime = require('./middle/resTime'),
@@ -47,8 +48,23 @@ module.exports = function (config)
        .use(send())
        .use(save({
            logPath: config.logPath
-       }))
-       .listen(config.port);
+       }));
+
+    var httpServer = app.listen(config.port);
+
+    var io = require('./lib/socketMgr');
+    io.initConfig(config);
+
+    httpServer.on('connection', (socket) => {
+      socket.on('data', (data) => {
+
+        if (socket.originalRequest) {
+          socket.originalRequest = Buffer.concat([socket.originalRequest, data]);
+        } else {
+          socket.originalRequest = data;
+        }
+      });
+    })
 
     logger.info(`listening on port: ${config.port}`);
 };

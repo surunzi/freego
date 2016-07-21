@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>FreeGo Capture</title>
+    <link rel="shortcut icon" href="/free_go_proxy/public/favicon.ico"/>
+    <link rel="stylesheet" href="/free_go_proxy/public/css/capture.css" media="screen" title="no title" charset="utf-8">
+  </head>
+  <body>
+    </div>
+    <div class="freego_capture_container" id="freego_capture">
+      <header class="freego_capture_header">
+        FreeGo Capture
+      </header>
+      <div id="controlPanel" class="freego_capture_control_wrap">
+        <input class="freego_capture_control_input" type="text" name="userId" value="" placeholder="Enter User Id" v-on:keyup.enter="addListenUser">
+        <ul class="freego_capture_control_list">
+          {{{{raw}}}}
+            <li v-for="item in userIds" class="freego_capture_control_userid">{{item}}<i class="icon-remove" title="remove" v-on:click="removeListenUser($event)" data-userid="{{item}}">-</i></li>
+          {{{{/raw}}}}
+        </ul>
+      </div>
+      <div class="freego_capture_body">
+        <div class="freego_capture_detail">
+          <div is="request-detail" :data="currentDetail"></div>
+        </div>
+        <div class="freego_capture_table">
+          <table class="freego_capture_table_header">
+            <thead>
+              <tr>
+                <th class="freego_capture_table_col freego_capture_table_col_statuscode">Result</th>
+                <th class="freego_capture_table_col freego_capture_table_col_targetname">Target</th>
+                <th class="freego_capture_table_col freego_capture_table_col_method">Method</th>
+                <th class="freego_capture_table_col freego_capture_table_col_host">Host</th>
+                <th class="freego_capture_table_col freego_capture_table_col_url">URL</th>
+              </tr>
+            </thead>
+          </table>
+          <div class="freego_capture_table_body">
+            <table>
+              <tbody><tr is="request-component" v-for="item in requests" :data="item"></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <script src="/free_go_proxy/public/lib.js"></script>
+      <script src="/free_go_proxy/public/vue.min.js"></script>
+      <script src="/free_go_proxy/socket/socket.io.js"></script>
+      {{{{raw}}}}
+        <script type="text/template" id="request-item-component-template">
+          <tr data-id="{{data.requestId}}" v-on:click="onSelect(data)">
+            <td class="freego_capture_table_col freego_capture_table_col_statuscode" v-if="data.res">{{data.res.statusCode}}</td>
+            <td class="freego_capture_table_col freego_capture_table_col_statuscode" v-else></td>
+            <td class="freego_capture_table_col freego_capture_table_col_targetname" title="{{data.targetName}}({{data.targetIP}})">{{data.targetName}}</td>
+            <td class="freego_capture_table_col freego_capture_table_col_method">{{data.req.method}}</td>
+            <td class="freego_capture_table_col freego_capture_table_col_host" title="{{data.req.host}}">{{data.req.host}}</td>
+            <td class="freego_capture_table_col freego_capture_table_col_url" title="{{data.req.url}}">{{data.req.url}}</td>
+          </tr>
+        </script>
+        <script type="text/template" id="request-detail-component-template">
+          <div v-if="data.requestId">
+            <div class="freego_capture_detail_header_wrap">
+              <span class="freego_capture_detail_header">Request Id: {{data.requestId}}</span>
+              &nbsp;&nbsp;&nbsp;
+              <span class="freego_capture_detail_header">User Id: {{data.userId}}</span>
+            </div>
+            <div class="freego_capture_detail_main">
+              <div class="freego_capture_detail_request_wrap">
+                <div class="freego_capture_detail_top_wrap">
+                  <header class="freego_capture_detail_title">Request</header>
+                  <a class="freego_proxy_detail_button freego_proxy_detail_button_selected" v-on:click="switchTab('req', 'headers', $event)">Headers</a>
+                  <a class="freego_proxy_detail_button" v-on:click="switchTab('req', 'cookie', $event)">Cookie</a>
+                  <a class="freego_proxy_detail_button" v-on:click="switchTab('req', 'query', $event)">Query</a>
+                  <a class="freego_proxy_detail_button" v-on:click="switchTab('req', 'raw', $event)">Raw</a>
+                </div>
+                <div class="freego_capture_detail_content">
+                  <div class="freego_capture_detail_tab freego_capture_detail_content_headers" data-view-scope="headers" style="display:block;">
+                    <div>
+                      <div class="freego_capture_detail_request">{{data.rawReq.split("\r\n").shift()}}</div>
+                      <ul>
+                        <li v-for="item in data.reqHeaders">{{item.name}}:&nbsp;{{item.value}}</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="freego_capture_detail_tab freego_capture_detail_content_cookie" data-view-scope="cookie">
+                    <div>
+                      <ul>
+                        <li v-for="item in data.cookiesArray">{{item.name}}:&nbsp;{{item.value}}</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="freego_capture_detail_tab freego_capture_detail_content_query" data-view-scope="query">
+                    <div>
+                      <ul>
+                        <li v-for="item in data.queryArray">{{item.name}}:&nbsp;{{item.value}}</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="freego_capture_detail_tab freego_capture_detail_content_raw" data-view-scope="raw">
+                    <pre class="freego_capture_detail_request">{{data.rawReq}}</pre>
+                  </div>
+                </div>
+              </div>
+              <div class="freego_capture_detail_response_wrap">
+                <div class="freego_capture_detail_top_wrap">
+                  <header class="freego_capture_detail_title">Response</header>
+                  <a class="freego_proxy_detail_button freego_proxy_detail_button_selected"  v-on:click="switchTab('res', 'headers', $event)">Headers</a>
+                  <a class="freego_proxy_detail_button" v-if="data.resJSON" v-on:click="switchTab('res', 'json', $event)">JSON</a>
+                  <a class="freego_proxy_detail_button" v-on:click="switchTab('res', 'raw', $event)">Raw</a>
+                </div>
+                <div class="freego_capture_detail_content">
+                  <div class="freego_capture_detail_tab freego_capture_detail_content_headers" data-view-scope="headers" style="display:block;">
+                    <div>
+                      <ul>
+                        <li v-for="item in data.resHeaders">{{item.name}}:&nbsp;{{item.value}}</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="freego_capture_detail_tab freego_capture_detail_content_json" data-view-scope="json" v-if="data.resJSON">
+                    <pre>{{data.resJSON}}</pre>
+                  </div>
+                  <div class="freego_capture_detail_tab freego_capture_detail_content_raw" data-view-scope="raw">
+                    <pre class="freego_capture_detail_request">{{data.rawRes}}</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <div v-else>
+          </div>
+        </script>
+      {{{{/raw}}}}
+      <script src="/free_go_proxy/public/capture.js" charset="utf-8"></script>
+    </div>
+  </body>
+</html>

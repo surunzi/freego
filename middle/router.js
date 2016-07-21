@@ -12,5 +12,13 @@ module.exports = function ()
         this.body = tpl({target});
     });
 
+    router.get('*/freego_capture', function *()
+    {
+        var target = this.target;
+
+        var tpl = yield readTpl('freego_capture');
+        this.body = tpl({target});
+    });
+
     return router.routes();
 };

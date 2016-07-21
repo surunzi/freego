@@ -1,5 +1,11 @@
 module.exports = {
+  "node" : {
     files: ['middle/*.js', 'lib/*.js', 'index.js'],
     output: 'lib/util.js',
     format: 'commonjs'
+  },
+  "page" : {
+    files: ['public/capture.js'],
+    output: 'public/lib.js'
+  }
 };

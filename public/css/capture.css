@@ -1,0 +1,290 @@
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+main, menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, main, menu, nav, section {
+	display: block;
+}
+body {
+  font-family: "Courier New";
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+
+/* Don't kill focus outline for keyboard users: http://24ways.org/2009/dont-lose-your-focus */
+a:hover, a:active {
+    outline: none;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/*html, body {
+  height: 100%;
+}*/
+
+.freego_capture_container {
+  margin: 20px 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.freego_capture_header {
+  font-size: 42px;
+  font-weight: bold;
+  position: absolute;
+  width: 100%;
+}
+
+.freego_capture_body {
+  position: absolute;;
+  top: 53px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.freego_capture_table {
+  position: relative;
+  text-align: center;
+  width: 50%;
+  height: 100%;
+  box-sizing: border-box;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  cursor: default;
+}
+
+.freego_capture_table table {
+  table-layout: fixed;
+}
+
+.freego_capture_table thead {
+  border-bottom: 1px solid #aaa;
+}
+
+.freego_capture_table tbody tr:hover {
+  background-color: #dddddd;
+}
+
+.freego_capture_table_header {
+  width: 100%;
+}
+
+.freego_capture_table_body {
+  position: absolute;
+  top: 20px;
+  bottom: 0;
+  width: 100%;
+  overflow-y: scroll;
+}
+
+.freego_capture_table_body table {
+  width: 100%;
+}
+
+.freego_capture_table_col_statuscode {
+  width: 30px;
+}
+
+.freego_capture_table_col_targetname {
+  width: 120px;
+}
+
+.freego_capture_table_col_method {
+  width: 30px;
+}
+
+.freego_capture_table_col_host {
+  width: 140px;
+}
+
+/*.freego_capture_table_col_url {
+  width: 46%;
+}*/
+
+tbody .freego_capture_table_col_url {
+  text-align: left;
+}
+
+.freego_capture_table_col_length {
+  width: 6%;
+}
+
+tbody .freego_capture_table_col_length {
+  text-align: left;
+}
+
+.freego_capture_table_col_content_type {
+  width: 10%;
+}
+
+tbody .freego_capture_table_col_content_type {
+  text-align: left;
+}
+
+.freego_capture_table_col {
+  padding: 0 5px;
+}
+
+.freego_capture_table_col {
+  max-width: 0;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.freego_capture_detail {
+  position: absolute;
+  left: 50%;
+  top: 15px;
+  bottom: 0;
+  width: 50%;
+  box-sizing: border-box;
+  background-color: #eee;
+  padding: 5px;
+  overflow: scroll;
+  font-size: 14px;
+}
+
+.freego_capture_detail_main {
+  position: absolute;
+  top: 36px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 5px;
+}
+
+.freego_capture_detail table {
+  width: 100%;
+  text-align: center;
+}
+
+.freego_capture_detail table,
+.freego_capture_detail th,
+.freego_capture_detail td {
+  border: 1px solid #aaa;
+}
+
+.freego_capture_detail_header_wrap {
+  margin: 6px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.freego_capture_detail_header {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.freego_capture_detail_top_wrap {
+  margin: 6px 0;
+}
+
+.freego_capture_detail_title {
+  font-size: 18px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.freego_capture_detail_tab {
+  font-family: monospace;
+}
+
+.freego_capture_detail_content_headers,
+.freego_capture_detail_content_cookie,
+.freego_capture_detail_content_query,
+.freego_capture_detail_content_json,
+.freego_capture_detail_content_raw {
+  display:none;
+}
+
+.freego_capture_detail_response_wrap,
+.freego_capture_detail_request_wrap {
+  border-bottom: 1px solid #ddd;
+  height: 50%;
+  box-sizing: border-box;
+  overflow: scroll;
+}
+
+.freego_proxy_detail_button {
+  background-color: #ddd;
+  margin-left: 10px;
+  padding: 2px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.freego_proxy_detail_button_selected {
+  background-color: #999;
+  color: #ddd;
+}
+
+.freego_capture_item_selected {
+  background-color: #428bca !important;
+  color: #fff;
+}
+
+.freego_capture_control_wrap {
+  position: absolute;
+  left: 380px;
+}
+
+.freego_capture_control_input {
+  font-size: 16px;
+  padding: 10px;
+}
+
+.freego_capture_control_list {
+  display: inline-block;
+}
+
+.freego_capture_control_userid {
+  display: inline-block;
+  margin: 4px;
+  padding: 4px;
+  background-color: #eee;
+}
+
+.icon-remove {
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 4px;
+}
