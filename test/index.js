@@ -5,6 +5,7 @@ freeGo({
     port: 13191,
     logPath: path.resolve(__dirname, '../log'),
     password: 'freego',
+    forwardId: true,
     ip: ['127.0.0.1'],
     proxy: {
         freeGo: {
@@ -20,6 +21,7 @@ freeGo({
         freeGoDean: {
             pattern: /http:\/\/freego\.com\/dean\//,
             path: '/dean/',
+            autoJump: true,
             target: [
                 {
                     name: 'DeanOne',

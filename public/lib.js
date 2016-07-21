@@ -7,16 +7,16 @@
     } else if (typeof module === 'object' && module.exports)
     {
         module.exports = factory();
-    } else { root._ = factory() }
+    } else { root._ = factory(); }
 }(this, function ()
 {
-        var _ = {};
+    var _ = {};
 
     if (typeof window === 'object' && window._) _ = window._;
 
     /* ------------------------------ last ------------------------------ */
 
-    var last = _.last = (function (exports)
+    var last = _.last = (function ()
     {
         /* Get the last element of array.
          *
@@ -30,25 +30,25 @@
          * ```
          */
 
-        exports = function (arr)
+        function exports(arr)
         {
             var len = arr ? arr.length : 0;
 
             if (len) return arr[len - 1];
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ isUndef ------------------------------ */
 
-    var isUndef = _.isUndef = (function (exports)
+    var isUndef = _.isUndef = (function ()
     {
         /* Check if value is undefined.
          *
          * |Name  |Type   |Desc                      |
          * |------|-------|--------------------------|
-         * |val   |*      |The value to check        |
+         * |val   |*      |Value to check            |
          * |return|boolean|True if value is undefined|
          *
          * ```javascript
@@ -57,23 +57,23 @@
          * ```
          */
 
-        exports = function (val)
+        function exports(val)
         {
             return val === void 0;
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ isObj ------------------------------ */
 
-    var isObj = _.isObj = (function (exports)
+    var isObj = _.isObj = (function ()
     {
         /* Check if value is the language type of Object.
          *
          * |Name  |Type   |Desc                      |
          * |------|-------|--------------------------|
-         * |val   |*      |The value to check        |
+         * |val   |*      |Value to check            |
          * |return|boolean|True if value is an object|
          *
          * [Language Spec](http://www.ecma-international.org/ecma-262/6.0/#sec-ecmascript-language-types)
@@ -84,19 +84,19 @@
          * ```
          */
 
-        exports = function (val)
+        function exports(val)
         {
             var type = typeof val;
 
             return !!val && (type === 'function' || type === 'object');
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ inherits ------------------------------ */
 
-    var inherits = _.inherits = (function (exports)
+    var inherits = _.inherits = (function ()
     {
         /* Inherit the prototype methods from one constructor into another.
          *
@@ -130,27 +130,27 @@
 
         function noop() {}
 
-        exports = function (Class, SuperClass)
+        function exports(Class, SuperClass)
         {
             if (objCreate) return Class.prototype = objCreate(SuperClass.prototype);
 
             noop.prototype  = SuperClass.prototype;
             Class.prototype = new noop();
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ has ------------------------------ */
 
-    var has = _.has = (function (exports)
+    var has = _.has = (function ()
     {
         /* Checks if key is a direct property.
          *
          * |Name  |Type   |Desc                            |
          * |------|-------|--------------------------------|
-         * |obj   |object |The object to query             |
-         * |key   |string |The path to check               |
+         * |obj   |object |Object to query                 |
+         * |key   |string |Path to check                   |
          * |return|boolean|True if key is a direct property|
          *
          * ```javascript
@@ -160,24 +160,24 @@
 
         var hasOwnProp = Object.prototype.hasOwnProperty;
 
-        exports = function (obj, key)
+        function exports(obj, key)
         {
             return hasOwnProp.call(obj, key);
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ allKeys ------------------------------ */
 
-    var allKeys = _.allKeys = (function (exports)
+    var allKeys = _.allKeys = (function ()
     {
         /* Retrieve all the names of object's own and inherited properties.
          *
-         * |Name  |Type  |Desc                           |
-         * |------|------|-------------------------------|
-         * |obj   |object|The object to query            |
-         * |return|array |The array of all property names|
+         * |Name  |Type  |Desc                       |
+         * |------|------|---------------------------|
+         * |obj   |object|Object to query            |
+         * |return|array |Array of all property names|
          *
          * > Members of Object's prototype won't be retrieved.
          *
@@ -188,21 +188,21 @@
          * ```
          */
 
-        exports = function (obj)
+        function exports(obj)
         {
             var ret = [], key;
 
             for (key in obj) ret.push(key);
 
             return ret;
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ splitCase ------------------------------ */
 
-    var splitCase = _.splitCase = (function (exports)
+    var splitCase = _.splitCase = (function ()
     {
         /* Split different string case to an array.
          *
@@ -236,11 +236,11 @@
         }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ camelCase ------------------------------ */
 
-    var camelCase = _.camelCase = (function (exports)
+    var camelCase = _.camelCase = (function ()
     {
         /* Convert string to "camelCase".
          *
@@ -279,11 +279,11 @@
         }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ kebabCase ------------------------------ */
 
-    var kebabCase = _.kebabCase = (function (exports)
+    var kebabCase = _.kebabCase = (function ()
     {
         /* Convert string to "kebabCase".
          *
@@ -306,13 +306,13 @@
         }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ idxOf ------------------------------ */
 
-    var idxOf = _.idxOf = (function (exports)
+    var idxOf = _.idxOf = (function ()
     {
-        /* Get the index at which the first occurrence of value.
+        /* Get the index at which the first occurrence of value. TODO
          *
          * |Name       |Type  |Desc                |
          * |-----------|------|--------------------|
@@ -325,13 +325,13 @@
          * ```
          */
 
-        exports = function (arr, val, fromIdx)
+        function exports(arr, val, fromIdx)
         {
             return Array.prototype.indexOf.call(arr, val);
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ keys ------------------------------ */
 
@@ -339,10 +339,10 @@
     {
         /* Create an array of the own enumerable property names of object.
          *
-         * |Name  |Type  |Desc                       |
-         * |------|------|---------------------------|
-         * |obj   |object|The object to query        |
-         * |return|array |The array of property names|
+         * |Name  |Type  |Desc                   |
+         * |------|------|-----------------------|
+         * |obj   |object|Object to query        |
+         * |return|array |Array of property names|
          */
 
         exports = Object.keys || function (obj)
@@ -362,7 +362,7 @@
 
     /* ------------------------------ identity ------------------------------ */
 
-    var identity = _.identity = (function (exports)
+    var identity = _.identity = (function ()
     {
         /* Return the first argument given.
          *
@@ -376,35 +376,39 @@
          * ```
          */
 
-        exports = function (val)
+        function exports(val)
         {
             return val;
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ objToStr ------------------------------ */
 
-    var objToStr = _.objToStr = (function (exports)
+    var objToStr = _.objToStr = (function ()
     {
         /* Alias of Object.prototype.toString.
          *
-         * |Name  |Type  |Desc                                    |
-         * |------|------|----------------------------------------|
-         * |value |*     |Source value                            |
-         * |return|string|String representation of the given value|
+         * |Name  |Type  |Desc                                |
+         * |------|------|------------------------------------|
+         * |value |*     |Source value                        |
+         * |return|string|String representation of given value|
+         * 
+         * ```javascript
+         * objToStr(5); // -> '[object Number]'
+         * ```
          */
 
         var ObjToStr = Object.prototype.toString;
 
-        exports = function (val)
+        function exports(val)
         {
             return ObjToStr.call(val);
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ isArr ------------------------------ */
 
@@ -433,29 +437,30 @@
 
     /* ------------------------------ isNum ------------------------------ */
 
-    var isNum = _.isNum = (function (exports)
+    var isNum = _.isNum = (function ()
     {
         /* Checks if value is classified as a Number primitive or object.
          *
-         * |Name  |Type   |Desc                                             |
-         * |------|-------|-------------------------------------------------|
-         * |value |*      |The value to check                               |
-         * |return|boolean|True if value is correctly classified, else false|
+         * |Name  |Type   |Desc                                 |
+         * |------|-------|-------------------------------------|
+         * |value |*      |Value to check                       |
+         * |return|boolean|True if value is correctly classified|
          */
 
-        exports = function (val)
+        function exports(val)
         {
             return objToStr(val) === '[object Number]';
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ isArrLike ------------------------------ */
 
     var isArrLike = _.isArrLike = (function (exports)
     {
-        // TODO
+        /* TODO
+         */
 
         var MAX_ARR_IDX = Math.pow(2, 53) - 1;
 
@@ -473,22 +478,22 @@
 
     /* ------------------------------ each ------------------------------ */
 
-    var each = _.each = (function (exports)
+    var each = _.each = (function ()
     {
         /* Iterates over elements of collection and invokes iteratee for each element.
          *
-         * |Name    |Type         |Desc                          |
-         * |--------|-------------|------------------------------|
-         * |obj     |object\|array|Collection to iterate over    |
-         * |iteratee|function     |Function invoked per iteration|
-         * |[ctx]   |*            |Function context              |
+         * |Name    |Type        |Desc                          |
+         * |--------|------------|------------------------------|
+         * |obj     |object array|Collection to iterate over    |
+         * |iteratee|function    |Function invoked per iteration|
+         * |[ctx]   |*           |Function context              |
          *
          * ```javascript
          * each({'a': 1, 'b': 2}, function (val, key) {});
          * ```
          */
 
-        exports = function (obj, iteratee, ctx)
+        function exports(obj, iteratee, ctx)
         {
             var i, len;
 
@@ -505,14 +510,14 @@
             }
 
             return obj;
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ createAssigner ------------------------------ */
 
-    var createAssigner = _.createAssigner = (function (exports)
+    var createAssigner = _.createAssigner = (function ()
     {
         /* Used to create extend, extendOwn and defaults.
          *
@@ -520,10 +525,10 @@
          * |--------|--------|------------------------------|
          * |keysFn  |function|Function to get object keys   |
          * |defaults|boolean |No override when set to true  |
-         * |return  |function|The result function, extend...|
+         * |return  |function|Result function, extend...    |
          */
 
-        exports = function (keysFn, defaults)
+        function exports(keysFn, defaults)
         {
             return function (obj)
             {
@@ -541,10 +546,10 @@
 
                 return obj;
             };
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ extend ------------------------------ */
 
@@ -592,7 +597,7 @@
 
     /* ------------------------------ values ------------------------------ */
 
-    var values = _.values = (function (exports)
+    var values = _.values = (function ()
     {
         /* Creates an array of the own enumerable property values of object.
          *
@@ -606,23 +611,24 @@
          * ```
          */
 
-        exports = function (obj)
+        function exports(obj)
         {
             var ret = [];
 
             each(obj, function (val) { ret.push(val) });
 
             return ret;
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ contain ------------------------------ */
 
     var contain = _.contain = (function (exports)
     {
-        // TODO
+        /* TODO
+         */
 
         exports = function (arr, val)
         {
@@ -636,13 +642,13 @@
 
     /* ------------------------------ isStr ------------------------------ */
 
-    var isStr = _.isStr = (function (exports)
+    var isStr = _.isStr = (function ()
     {
         /* Check if value is a string primitive.
          *
          * |Name  |Type   |Desc                               |
          * |------|-------|-----------------------------------|
-         * |val   |*      |The value to check                 |
+         * |val   |*      |Value to check                     |
          * |return|boolean|True if value is a string primitive|
          *
          * ```javascript
@@ -650,23 +656,23 @@
          * ```
          */
 
-        exports = function (val)
+        function exports(val)
         {
             return objToStr(val) === '[object String]';
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ isFn ------------------------------ */
 
-    var isFn = _.isFn = (function (exports)
+    var isFn = _.isFn = (function ()
     {
         /* Check if value is a function.
          *
          * |Name  |Type   |Desc                       |
          * |------|-------|---------------------------|
-         * |val   |*      |The value to check         |
+         * |val   |*      |Value to check             |
          * |return|boolean|True if value is a function|
          *
          * Generator function is also classified as true.
@@ -677,19 +683,19 @@
          * ```
          */
 
-        exports = function (val)
+        function exports(val)
         {
             var objStr = objToStr(val);
 
             return objStr === '[object Function]' || objStr === '[object GeneratorFunction]';
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ isMatch ------------------------------ */
 
-    var isMatch = _.isMatch = (function (exports)
+    var isMatch = _.isMatch = (function ()
     {
         /* Check if keys and values in src are contained in obj.
          *
@@ -704,7 +710,7 @@
          * ```
          */
 
-        exports = function (obj, src)
+        function exports(obj, src)
         {
             var _keys = keys(src),
                 len = _keys.length;
@@ -720,18 +726,19 @@
             }
 
             return true;
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ matcher ------------------------------ */
 
-    var matcher = _.matcher = (function (exports)
+    var matcher = _.matcher = (function ()
     {
-        // TODO
+        /* TODO
+         */
 
-        exports = function (attrs)
+        function exports(attrs)
         {
             attrs = extendOwn({}, attrs);
 
@@ -739,16 +746,19 @@
             {
                 return isMatch(obj, attrs);
             };
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ optimizeCb ------------------------------ */
 
-    var optimizeCb = _.optimizeCb = (function (exports)
+    var optimizeCb = _.optimizeCb = (function ()
     {
-        exports = function (func, ctx, argCount)
+        /* TODO
+         */
+
+        function exports(func, ctx, argCount)
         {
             if (isUndef(ctx)) return func;
 
@@ -772,17 +782,16 @@
             {
                 return func.apply(ctx, arguments);
             };
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ safeCb ------------------------------ */
 
     var safeCb = _.safeCb = (function (exports)
     {
-        /* function
-         * safeCb: Create callback based on input value.
+        /* Create callback based on input value. TODO
          */
 
         exports = function (val, ctx, argCount)
@@ -807,23 +816,23 @@
 
     /* ------------------------------ map ------------------------------ */
 
-    var map = _.map = (function (exports)
+    var map = _.map = (function ()
     {
         /* Create an array of values by running each element in collection through iteratee.
          *
-         * |Name    |Type         |Desc                          |
-         * |--------|-------------|------------------------------|
-         * |obj     |array\|object|Collection to iterate over    |
-         * |iteratee|function     |Function invoked per iteration|
-         * |[ctx]   |*            |Function context              |
-         * |return  |array        |New mapped array              |
+         * |Name    |Type        |Desc                          |
+         * |--------|------------|------------------------------|
+         * |obj     |array object|Collection to iterate over    |
+         * |iteratee|function    |Function invoked per iteration|
+         * |[ctx]   |*           |Function context              |
+         * |return  |array       |New mapped array              |
          *
          * ```javascript
          * map([4, 8], function (n) { return n * n; }); // -> [16, 64]
          * ```
          */
 
-        exports = function (obj, iteratee, ctx)
+        function exports(obj, iteratee, ctx)
         {
             iteratee = safeCb(iteratee, ctx);
 
@@ -838,14 +847,14 @@
             }
 
             return results;
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ toArr ------------------------------ */
 
-    var toArr = _.toArr = (function (exports)
+    var toArr = _.toArr = (function ()
     {
         /* Convert value to an array.
          *
@@ -862,7 +871,7 @@
          * ```
          */
 
-        exports = function (val)
+        function exports(val)
         {
             if (!val) return [];
 
@@ -871,22 +880,22 @@
             if (isArrLike(val) && !isStr(val)) return map(val);
 
             return [val];
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ Class ------------------------------ */
 
-    var Class = _.Class = (function (exports)
+    var Class = _.Class = (function ()
     {
         /* Create JavaScript class.
          *
-         * |Name   |Type    |Desc                             |
-         * |-------|--------|---------------------------------|
-         * |methods|object  |Public methods                   |
-         * |statics|object  |Static methods                   |
-         * |return |function|Function used to create instances|
+         * |Name     |Type    |Desc                             |
+         * |---------|--------|---------------------------------|
+         * |methods  |object  |Public methods                   |
+         * |[statics]|object  |Static methods                   |
+         * |return   |function|Function used to create instances|
          *
          * ```javascript
          * var People = Class({
@@ -924,6 +933,11 @@
          * Student.is(a); // -> true
          * ```
          */
+
+        function exports(methods, statics)
+        {
+            return Base.extend(methods, statics);
+        }
 
         var regCallSuper = /callSuper/;
 
@@ -976,11 +990,6 @@
             return ctor;
         }
 
-        exports = function (methods, statics)
-        {
-            return Base.extend(methods, statics);
-        };
-
         var Base = exports.Base = makeClass(Object, {
             className: 'Base',
             callSuper: function (name)
@@ -998,19 +1007,19 @@
         });
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ Select ------------------------------ */
 
     var Select = _.Select = (function (exports)
     {
-        /* jQuery like dom manipulator.
+        /* jQuery like dom manipulator. TODO
          */
 
         function mergeArr(first, second)
         {
             var len = second.length,
-                i   = first.length;
+                i = first.length;
 
             for (var j = 0; j < len; j++) first[i++] = second[j];
 
@@ -1031,7 +1040,7 @@
 
                 if (selector.nodeType)
                 {
-                    this[0]     = selector;
+                    this[0] = selector;
                     this.length = 1;
                 }
             },
@@ -1066,6 +1075,9 @@
 
     var $safeNodes = _.$safeNodes = (function (exports)
     {
+        /* TODO
+         */
+
         exports = function (nodes)
         {
             if (isStr(nodes)) return new Select(nodes);
@@ -1078,9 +1090,18 @@
 
     /* ------------------------------ $attr ------------------------------ */
 
-    var $attr = _.$attr = (function (exports)
+    var $attr = _.$attr = (function ()
     {
-        exports = function (nodes, name, val)
+        /* Attributes manipulation. TODO
+         *
+         * ```javascript
+         * $attr('#test', 'attr1', 'test');
+         * $attr('#test', 'attr1'); // -> test
+         * $attr.remove('#test', 'attr1');
+         * ```
+         */
+
+        function exports(nodes, name, val)
         {
             nodes = $safeNodes(nodes);
 
@@ -1095,7 +1116,7 @@
             }
 
             setAttr(nodes, attrs);
-        };
+        }
 
         exports.remove = function (nodes, names)
         {
@@ -1128,13 +1149,20 @@
         }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ $data ------------------------------ */
 
-    var $data = _.$data = (function (exports)
+    var $data = _.$data = (function ()
     {
-        exports = function (nodes, name, val)
+        /* Data manipulation TODO
+         *
+         * ```javascript
+         * $data('#test', 'attr1', 'eustia');
+         * ```
+         */
+
+        function exports(nodes, name, val)
         {
             var dataName = name;
 
@@ -1149,16 +1177,26 @@
             }
 
             return $attr(nodes, dataName, val);
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ $css ------------------------------ */
 
-    var $css = _.$css = (function (exports)
+    var $css = _.$css = (function ()
     {
-        exports = function (nodes, name, val)
+        /* Css manipulation. TODO
+         *
+         * ```javascript
+         * $css('#test', {
+         *     'color': '#fff',
+         *     'background': 'black'
+         * });
+         * ```
+         */
+
+        function exports(nodes, name, val)
         {
             nodes = $safeNodes(nodes);
 
@@ -1173,7 +1211,7 @@
             }
 
             setCss(nodes, css);
-        };
+        }
 
         function getCss(node, name)
         {
@@ -1211,12 +1249,19 @@
         }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ $insert ------------------------------ */
 
     var $insert = _.$insert = (function (exports)
     {
+        /* Insert html on different position. TODO
+         *
+         * ```javascript
+         * $insert.append('#test', '<div>test</div>');
+         * ```
+         */
+
         exports = {
             before: insertFactory('beforebegin'),
             after: insertFactory('afterend'),
@@ -1244,6 +1289,9 @@
 
     var $offset = _.$offset = (function (exports)
     {
+        /* TODO
+         */
+
         exports = function (nodes)
         {
             nodes = $safeNodes(nodes);
@@ -1254,7 +1302,7 @@
 
             return {
                 left: clientRect.left + window.pageXOffset,
-                top : clientRect.top  + window.pageYOffset,
+                top : clientRect.top + window.pageYOffset,
                 width : Math.round(clientRect.width),
                 height: Math.round(clientRect.height)
             };
@@ -1267,6 +1315,9 @@
 
     var $property = _.$property = (function (exports)
     {
+        /* TODO
+         */
+
         exports = {
             html: propFactory('innerHTML'),
             text: propFactory('textContent'),
@@ -1295,6 +1346,9 @@
 
     var $remove = _.$remove = (function (exports)
     {
+        /* TODO
+         */
+
         exports = function (nodes)
         {
             nodes = $safeNodes(nodes);
@@ -1312,9 +1366,16 @@
 
     /* ------------------------------ $show ------------------------------ */
 
-    var $show = _.$show = (function (exports)
+    var $show = _.$show = (function ()
     {
-        exports = function (nodes)
+        /* Show elements. TODO
+         *
+         * ```javascript
+         * $show('#test');
+         * ```
+         */
+
+        function exports(nodes)
         {
             nodes = $safeNodes(nodes);
 
@@ -1325,7 +1386,7 @@
                     node.style.display = getDefDisplay(node.nodeName);
                 }
             });
-        };
+        }
 
         function isHidden(node)
         {
@@ -1352,12 +1413,15 @@
         }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ delegate ------------------------------ */
 
     var delegate = _.delegate = (function (exports)
     {
+        /* TODO
+         */
+
         function retTrue()  { return true }
         function retFalse() { return false }
 
@@ -1511,6 +1575,16 @@
 
     var $event = _.$event = (function (exports)
     {
+        /* bind events to certain dom elements. TODO
+         *
+         * ```javascript
+         * event.on('#test', 'click', function ()
+         * {
+         *     // ...
+         * });
+         * ```
+         */
+
         exports = {
             on: eventFactory('add'),
             off: eventFactory('remove')
@@ -1540,16 +1614,16 @@
 
     /* ------------------------------ some ------------------------------ */
 
-    var some = _.some = (function (exports)
+    var some = _.some = (function ()
     {
         /* Check if predicate return truthy for any element.
          *
-         * |Name     |Type         |Desc                                          |
-         * |---------|-------------|----------------------------------------------|
-         * |obj      |array\|object|Collection to iterate over                    |
-         * |predicate|function     |Function to invoked per iteration             |
-         * |ctx      |*            |Predicate context                             |
-         * |return   |boolean      |True if any element passes the predicate check|
+         * |Name     |Type        |Desc                                          |
+         * |---------|------------|----------------------------------------------|
+         * |obj      |array object|Collection to iterate over                    |
+         * |predicate|function    |Function to invoked per iteration             |
+         * |ctx      |*           |Predicate context                             |
+         * |return   |boolean     |True if any element passes the predicate check|
          *
          * ```javascript
          * some([2, 5], function (val)
@@ -1559,7 +1633,7 @@
          * ```
          */
 
-        exports = function (obj, predicate, ctx)
+        function exports(obj, predicate, ctx)
         {
             predicate = safeCb(predicate, ctx);
 
@@ -1573,15 +1647,27 @@
             }
 
             return false;
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ $class ------------------------------ */
 
     var $class = _.$class = (function (exports)
     {
+        /* Class manipulation. TODO
+         *
+         * ```javascript
+         * $class.add('#test', 'class1');
+         * $class.has('#test', 'class1'); // -> true
+         * $class.remove('#test', 'class1');
+         * $class.has('#test', 'class1'); // -> false
+         * $class.toggle('#test', 'class1');
+         * $class.has('#test', 'class1'); // -> true
+         * ```
+         */
+
         exports = {
             add: function (nodes, name)
             {
@@ -1642,15 +1728,20 @@
 
     /* ------------------------------ $ ------------------------------ */
 
-    var $ = _.$ = (function (exports)
+    var $ = _.$ = (function ()
     {
-        /* jQuery like style dom manipulator.
+        /* jQuery like style dom manipulator. TODO
+         *
+         * ```javascript
+         * var $btn = $('#btn');
+         * $btn.html('eustia');
+         * ```
          */
 
-        exports = function (selector)
+        function exports(selector)
         {
             return new Select(selector);
-        };
+        }
 
         Select.methods({
             offset: function ()
@@ -1812,7 +1903,7 @@
         }
 
         return exports;
-    })({});
+    })();
 
     return _;
 }));

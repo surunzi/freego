@@ -81,6 +81,7 @@ successfully done.
 * port: Server port, default to 3000.
 * logPath: Log path, also path for saving http requests.
 * ip: Ip list to allow access, see [ip-filter](https://github.com/tunnckocore/ip-filter).
+* forwardId: Add request id to url, default to false.
 * filterType: Response type to save requests, html and json only by default.
 * filter: Filters for response content processing.
 * password: Password to bypass ip filter, false to turn it off.

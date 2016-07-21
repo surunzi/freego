@@ -1,11 +1,11 @@
 {
   "name": "freego",
-  "version": "0.0.5",
+  "version": "0.1.1",
   "description": "Proxy for redirecting requests to targeted servers",
   "main": "index.js",
   "scripts": {
     "test": "node test/index",
-    "updateEruda": "npm update eruda --save-dev && cp node_modules/eruda/dist/eruda.min.js public/",
+    "updateEruda": "npm update eruda --save-dev && cp node_modules/eruda/eruda.min.js public/",
     "testServer": "node test/server"
   },
   "repository": {
@@ -36,6 +36,6 @@
     "socket.io": "^1.4.8"
   },
   "devDependencies": {
-    "eruda": "^0.6.3"
+    "eruda": "^1.0.4"
   }
 }

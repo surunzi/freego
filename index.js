@@ -40,7 +40,8 @@ module.exports = function (config)
            password: config.password
        }))
        .use(forward({
-           filterType: config.filterType
+           filterType: config.filterType,
+           forwardId: config.forwardId
        }))
        .use(filter({
            filter: config.filter
