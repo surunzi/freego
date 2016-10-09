@@ -30,7 +30,6 @@ module.exports = function (options)
 
         if (logPath === 'stdout') return;
 
-        this.logger.info([logPath, getDate(), this.userId])
         var saveDir = path.resolve(logPath, getDate(), this.userId);
         yield mkdirp(saveDir);
 
