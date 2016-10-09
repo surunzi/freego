@@ -30,7 +30,8 @@ module.exports = function (options)
 
         if (logPath === 'stdout') return;
 
-        var saveDir = path.resolve(logPath, getDate());
+        this.logger.info([logPath, getDate(), this.userId])
+        var saveDir = path.resolve(logPath, getDate(), this.userId);
         yield mkdirp(saveDir);
 
         var savePath = path.resolve(saveDir, this.id + '.txt');
@@ -45,5 +46,5 @@ var padZero = num => num < 10 ? '0' + num : num;
 function getDate()
 {
     var date = new Date();
-    return date.getFullYear() + padZero(date.getMonth() + 1) + padZero(date.getDate());
+    return '' + date.getFullYear() + padZero(date.getMonth() + 1) + padZero(date.getDate());
 }
