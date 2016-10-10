@@ -3,13 +3,14 @@ var freeGo = require('../index'),
 
 freeGo({
     port: 13191,
+    socketPort: 13252,
     logPath: path.resolve(__dirname, '../log'),
     password: 'freego',
     forwardId: true,
     ip: ['127.0.0.1'],
     proxy: {
         freeGo: {
-            pattern: /http:\/\/freego\.com\/favicon.ico/,
+            pattern: /http:\/\/freego\.oa\.com\/favicon.ico/,
             target: [
                 {
                     name: 'localhost',
@@ -19,7 +20,7 @@ freeGo({
             ]
         },
         freeGoDean: {
-            pattern: /http:\/\/freego\.com\/dean\//,
+            pattern: /http:\/\/freego\.oa\.com\/dean\//,
             path: '/dean/',
             autoJump: true,
             target: [
@@ -41,7 +42,7 @@ freeGo({
             ]
         },
         freeGoSam: {
-            pattern: /http:\/\/freego\.com\/sam\//,
+            pattern: /http:\/\/freego\.oa\.com\/sam\//,
             path: '/sam/',
             target: [
                 {
