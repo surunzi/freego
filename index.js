@@ -51,7 +51,7 @@ module.exports = function (config)
            logPath: config.logPath
        }));
 
-    var httpServer = app.listen(config.port);
+    var httpServer = app.listen(config.port, config.bindAddress);
 
     var io = require('./lib/socketMgr');
     io.initConfig(config);
