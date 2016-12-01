@@ -58,7 +58,7 @@ module.exports = function (options)
             port: target.port,
             autoJump: p.autoJump,
             autoJumpUrl: p.autoJumpUrl || ctx.origin,
-            domain: p.domain || ctx.host,
+            domain: p.domain,
             path: p.path || '/',
             root: p
         };

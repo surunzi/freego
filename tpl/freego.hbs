@@ -72,6 +72,19 @@
         tbody tr:active td, tbody tr.active td {
             color: #fff;
         }
+        .clear-btn {
+            height: 30px;
+            margin: 10px 0;
+            padding: 4px;
+            background-color: #d55;
+        }
+        .clear-btn a {
+            display: block;
+            text-decoration: none;
+            text-align: center;
+            color: #fff;
+            line-height: 30px;
+        }
     </style>
 </head>
 <body>
@@ -99,10 +112,26 @@
                     {{/each}}
                 </tbody>
             </table>
+            <div class="clear-btn"><a href="javascript:;" id="clear-cookie">Clear</a></div>
             <script>
                 var len = {{target.root.target.length}};
 
                 for (var i = 0; i < len; i++) init(i);
+
+                document.getElementById('clear-cookie').onclick = function () {
+                    var hostArray = location.host.split('.')
+                    var cookie = 'free_go_proxy=;path={{target.path}};expires=' + getExpires(-1);
+
+                    document.cookie = cookie
+
+                    while (hostArray.length > 1) {
+                        var currentDomain = hostArray.join('.');
+                        document.cookie = cookie + ';domain=' + currentDomain;
+                        hostArray.shift();
+                    }
+
+                    location.reload();
+                }
 
                 function init(num)
                 {
