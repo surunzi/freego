@@ -142,7 +142,7 @@
                     var target = document.getElementById('target' + num);
                     if (isEnable) target.className += ' active';
 
-                    var cookie = 'free_go_proxy=' + num +';domain={{target.domain}};path={{target.path}};expires=';
+                    var cookie = 'free_go_proxy=' + num +';{{#if target.domain}}domain={{target.domain}};{{/if}}path={{target.path}};expires=';
 
                     target.onclick = function ()
                     {

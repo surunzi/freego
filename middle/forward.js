@@ -20,11 +20,18 @@ module.exports = function (options)
 
         if (forwardId) path = util.addQuery(path, 'freego', this.id);
 
+        // remove cache headers for test
+        var filterHeaders = util.defaults({}, req.headers);
+        delete filterHeaders['if-match']
+        delete filterHeaders['if-none-match']
+        delete filterHeaders['if-modified-since']
+        delete filterHeaders['if-unmodified-since']
+
         this.targetRes = yield request.call(this, {
             port: target.port,
             hostname: target.ip,
             method: req.method,
-            headers: req.headers,
+            headers: filterHeaders,
             path
         });
 
