@@ -11,7 +11,11 @@ module.exports = function ()
         if (!isHtml) return {headers, body};
 
         var target = this.target,
+            erudaTpl = target.root.injectTpl;
+
+        if (!erudaTpl) {
             erudaTpl = yield readTpl('eruda');
+        }
 
         var injectStr = erudaTpl({
             target: JSON.stringify(target.root.target),

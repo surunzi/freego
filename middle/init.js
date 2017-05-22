@@ -30,6 +30,7 @@ module.exports = function (options)
 
         this.logger.info(`client ip: ${this.ip}`);
 
+        this.logger.info(proxy);
         this.target = getTarget(this);
 
         yield next;
@@ -39,7 +40,7 @@ module.exports = function (options)
     {
         var href = ctx.href,
             cookies = ctx.cookies,
-            index = +(cookies.get('free_go_proxy') || 0);
+            targetName = (cookies.get('free_go_proxy') || '');
 
         for (var i = 0; i < proxyLen; i++)
         {
@@ -50,18 +51,28 @@ module.exports = function (options)
 
         if (i === proxyLen) return;
 
-        var target = p.target[index] || p.target[0];
+        var target = p.target[0];
 
-        return {
-            ip: target.ip,
-            name: target.name,
-            port: target.port,
+        util.each(p.target, function (t) {
+            if (t.name == targetName) {
+                target = t;
+                return false;
+            }
+        })
+
+        if (target.getIp && typeof target.getIp == 'function') {
+            var ipInfo = target.getIp(ctx);
+            target.ip = ipInfo.ip;
+            target.port = ipInfo.port;
+        }
+
+        return util.extend({
             autoJump: p.autoJump,
             autoJumpUrl: p.autoJumpUrl || ctx.origin,
             domain: p.domain,
             path: p.path || '/',
             root: p
-        };
+        }, target);
     }
 };
 

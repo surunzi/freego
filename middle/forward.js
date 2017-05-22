@@ -27,6 +27,10 @@ module.exports = function (options)
         delete filterHeaders['if-modified-since']
         delete filterHeaders['if-unmodified-since']
 
+        if (target.customHeader) {
+            filterHeaders = target.customHeader(filterHeaders, this);
+        }
+
         this.targetRes = yield request.call(this, {
             port: target.port,
             hostname: target.ip,

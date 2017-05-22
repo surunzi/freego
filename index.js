@@ -16,6 +16,10 @@ var init = require('./middle/init'),
     util = require('./lib/util'),
     defCfg = require('./config');
 
+var noopGenFunc = function* (next) {
+  yield next;
+}
+
 module.exports = function (config)
 {
     util.defaults(config, defCfg);
@@ -30,22 +34,28 @@ module.exports = function (config)
        }))
        .use(init({
            proxy: config.proxy,
-           logger
+           logger,
+           injectTpl: config.injectTpl
        }))
+       .use(config.afterInit || noopGenFunc)
        .use(resTime())
        .use(staticFile())
-       .use(router())
+       .use(router(config.routers))
        .use(auth({
+           custom: config.check,
            ip: config.ip,
            password: config.password
        }))
+       .use(config.beforeForward || noopGenFunc)
        .use(forward({
            filterType: config.filterType,
-           forwardId: config.forwardId
+           forwardId: config.forwardId,
+           customHeader: config.customHeader
        }))
        .use(filter({
            filter: config.filter
        }))
+       .use(config.afterForward || noopGenFunc)
        .use(send())
        .use(save({
            logPath: config.logPath
@@ -68,4 +78,10 @@ module.exports = function (config)
     })
 
     logger.info(`listening on port: ${config.port}`);
+
+    app.updateProxies = function (proxyConfig) {
+        util.extend(config.proxy, proxyConfig)
+    }
+
+    return app;
 };

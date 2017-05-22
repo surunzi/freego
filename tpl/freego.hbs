@@ -106,7 +106,7 @@
                 </thead>
                 <tbody>
                     {{#each target.root.target}}
-                        <tr id="target{{@index}}" ontouchstart>
+                        <tr id="target_{{name}}" ontouchstart>
                             <td>{{name}}</td>
                         </tr>
                     {{/each}}
@@ -114,6 +114,7 @@
             </table>
             <div class="clear-btn"><a href="javascript:;" id="clear-cookie">Clear</a></div>
             <script>
+                var targets = JSON.parse('{{{targets}}}')
                 var len = {{target.root.target.length}};
 
                 for (var i = 0; i < len; i++) init(i);
@@ -136,13 +137,14 @@
                 function init(num)
                 {
                     var isEnable = false;
+                    var name = targets[num].name;
 
-                    if (document.cookie.indexOf('free_go_proxy=' + num) > -1) isEnable = true;
+                    if (document.cookie.indexOf('free_go_proxy=' + name) > -1) isEnable = true;
 
-                    var target = document.getElementById('target' + num);
+                    var target = document.getElementById('target_' + name);
                     if (isEnable) target.className += ' active';
 
-                    var cookie = 'free_go_proxy=' + num +';{{#if target.domain}}domain={{target.domain}};{{/if}}path={{target.path}};expires=';
+                    var cookie = 'free_go_proxy=' + name +';{{#if target.domain}}domain={{target.domain}};{{/if}}path={{target.path}};expires=';
 
                     target.onclick = function ()
                     {

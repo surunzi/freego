@@ -48,13 +48,13 @@
             var tpl = '<div class="eruda-main-wrapper"><div class="eruda-table-wrapper">';
             tpl += '<table><tbody>';
 
-            var active = +(util.cookie.get('free_go_proxy') || 0);
+            var active = (util.cookie.get('free_go_proxy') || '');
 
             util.each(this._target, function (val, idx)
             {
-                var activeClass = active === idx ? 'active' : '';
+                var activeClass = active === val.name ? 'active' : '';
 
-                tpl += '<tr class="eruda-proxy ' + activeClass + '" data-idx="' + idx + '" ontouchstart>' +
+                tpl += '<tr class="eruda-proxy ' + activeClass + '" data-idx="' + idx + '" data-name="' + val.name + '" ontouchstart>' +
                     '<td>' + val.name + '</td><td>' + val.ip + ':' + val.port + '</td>' +
                     '</tr>'
             });
@@ -73,9 +73,9 @@
 
             this._$el.on('click', 'tr', function ()
             {
-                var idx = util.$(this).data('idx');
+                var name = util.$(this).data('name');
 
-                util.cookie.set('free_go_proxy', idx, {
+                util.cookie.set('free_go_proxy', name, {
                     path: self._path,
                     domain: self._domain,
                     expires: 30

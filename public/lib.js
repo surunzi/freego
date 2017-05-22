@@ -94,6 +94,31 @@
         return exports;
     })();
 
+    /* ------------------------------ startWith ------------------------------ */
+
+    var startWith = _.startWith = (function ()
+    {
+        /* Check if string starts with the given target string.
+         *
+         * |Name  |Type   |Desc                             |
+         * |------|-------|---------------------------------|
+         * |str   |string |String to search                 |
+         * |prefix|string |String prefix                    |
+         * |return|boolean|True if string starts with prefix|
+         *
+         * ```javascript
+         * startWith('ab', 'a'); // -> true
+         * ```
+         */
+
+        function exports(str, prefix)
+        {
+            return str.indexOf(prefix) === 0;
+        }
+
+        return exports;
+    })();
+
     /* ------------------------------ inherits ------------------------------ */
 
     var inherits = _.inherits = (function ()
@@ -126,17 +151,17 @@
          * ```
          */
 
-        var objCreate = Object.create;
-
-        function noop() {}
-
         function exports(Class, SuperClass)
         {
             if (objCreate) return Class.prototype = objCreate(SuperClass.prototype);
 
-            noop.prototype  = SuperClass.prototype;
+            noop.prototype = SuperClass.prototype;
             Class.prototype = new noop();
         }
+
+        var objCreate = Object.create;
+
+        function noop() {}
 
         return exports;
     })();
@@ -257,6 +282,10 @@
          * ```
          */
 
+        /* dependencies
+         * splitCase 
+         */
+
         function exports(str)
         {
             var arr = splitCase(str);
@@ -300,6 +329,10 @@
          * ```
          */
 
+        /* dependencies
+         * splitCase 
+         */
+
         function exports(str)
         {
             return splitCase(str).join('-');
@@ -312,7 +345,7 @@
 
     var idxOf = _.idxOf = (function ()
     {
-        /* Get the index at which the first occurrence of value. TODO
+        /* Get the index at which the first occurrence of value.
          *
          * |Name       |Type  |Desc                |
          * |-----------|------|--------------------|
@@ -327,7 +360,7 @@
 
         function exports(arr, val, fromIdx)
         {
-            return Array.prototype.indexOf.call(arr, val);
+            return Array.prototype.indexOf.call(arr, val, fromIdx);
         }
 
         return exports;
@@ -343,6 +376,14 @@
          * |------|------|-----------------------|
          * |obj   |object|Object to query        |
          * |return|array |Array of property names|
+         * 
+         * ```javascript
+         * keys({a: 1}); // -> ['a']
+         * ```
+         */
+
+        /* dependencies
+         * has 
          */
 
         exports = Object.keys || function (obj)
@@ -359,6 +400,46 @@
 
         return exports;
     })({});
+
+    /* ------------------------------ optimizeCb ------------------------------ */
+
+    var optimizeCb = _.optimizeCb = (function ()
+    {
+        /* Used for function context binding.
+         */
+
+        /* dependencies
+         * isUndef 
+         */
+
+        function exports(fn, ctx, argCount)
+        {
+            if (isUndef(ctx)) return fn;
+
+            switch (argCount == null ? 3 : argCount)
+            {
+                case 1: return function (val)
+                {
+                    return fn.call(ctx, val);
+                };
+                case 3: return function (val, idx, collection)
+                {
+                    return fn.call(ctx, val, idx, collection);
+                };
+                case 4: return function (accumulator, val, idx, collection)
+                {
+                    return fn.call(ctx, accumulator, val, idx, collection);
+                }
+            }
+
+            return function ()
+            {
+                return fn.apply(ctx, arguments);
+            };
+        }
+
+        return exports;
+    })();
 
     /* ------------------------------ identity ------------------------------ */
 
@@ -427,6 +508,10 @@
          * ```
          */
 
+        /* dependencies
+         * objToStr 
+         */
+
         exports = Array.isArray || function (val)
         {
             return objToStr(val) === '[object Array]';
@@ -447,6 +532,10 @@
          * |return|boolean|True if value is correctly classified|
          */
 
+        /* dependencies
+         * objToStr 
+         */
+
         function exports(val)
         {
             return objToStr(val) === '[object Number]';
@@ -455,26 +544,147 @@
         return exports;
     })();
 
+    /* ------------------------------ isStr ------------------------------ */
+
+    var isStr = _.isStr = (function ()
+    {
+        /* Check if value is a string primitive.
+         *
+         * |Name  |Type   |Desc                               |
+         * |------|-------|-----------------------------------|
+         * |val   |*      |Value to check                     |
+         * |return|boolean|True if value is a string primitive|
+         *
+         * ```javascript
+         * isStr('eris'); // -> true
+         * ```
+         */
+
+        /* dependencies
+         * objToStr 
+         */
+
+        function exports(val)
+        {
+            return objToStr(val) === '[object String]';
+        }
+
+        return exports;
+    })();
+
+    /* ------------------------------ safeGet ------------------------------ */
+
+    var safeGet = _.safeGet = (function ()
+    {
+        /* Get object property, don't throw undefined error.
+         *
+         * |Name  |Type        |Desc                     |
+         * |------|------------|-------------------------|
+         * |obj   |object      |Object to query          |
+         * |path  |array string|Path of property to get  |
+         * |return|*           |Target value or undefined|
+         *
+         * ```javascript
+         * var obj = {a: {aa: {aaa: 1}}};
+         * safeGet(obj, 'a.aa.aaa'); // -> 1
+         * safeGet(obj, ['a', 'aa']); // -> {aaa: 1}
+         * safeGet(obj, 'a.b'); // -> undefined
+         * ```
+         */
+
+        /* dependencies
+         * isStr isUndef 
+         */
+
+        function exports(obj, path)
+        {
+            if (isStr(path)) path = path.split('.');
+
+            var prop;
+
+            /* eslint-disable no-cond-assign */
+            while (prop = path.shift())
+            {
+                obj = obj[prop];
+                if (isUndef(obj)) return;
+            }
+
+            return obj;
+        }
+
+        return exports;
+    })();
+
+    /* ------------------------------ isFn ------------------------------ */
+
+    var isFn = _.isFn = (function ()
+    {
+        /* Check if value is a function.
+         *
+         * |Name  |Type   |Desc                       |
+         * |------|-------|---------------------------|
+         * |val   |*      |Value to check             |
+         * |return|boolean|True if value is a function|
+         *
+         * Generator function is also classified as true.
+         *
+         * ```javascript
+         * isFn(function() {}); // -> true
+         * isFn(function*() {}); // -> true
+         * ```
+         */
+
+        /* dependencies
+         * objToStr 
+         */
+
+        function exports(val)
+        {
+            var objStr = objToStr(val);
+
+            return objStr === '[object Function]' || objStr === '[object GeneratorFunction]';
+        }
+
+        return exports;
+    })();
+
     /* ------------------------------ isArrLike ------------------------------ */
 
-    var isArrLike = _.isArrLike = (function (exports)
+    var isArrLike = _.isArrLike = (function ()
     {
-        /* TODO
+        /* Check if value is array-like.
+         *
+         * |Name  |Type   |Desc                       |
+         * |------|-------|---------------------------|
+         * |value |*      |Value to check             |
+         * |return|boolean|True if value is array like|
+         *
+         * > Function returns false.
+         *
+         * ```javascript
+         * isArrLike('test'); // -> true
+         * isArrLike(document.body.children); // -> true;
+         * isArrLike([1, 2, 3]); // -> true
+         * ```
+         */
+
+        /* dependencies
+         * isNum has isFn 
          */
 
         var MAX_ARR_IDX = Math.pow(2, 53) - 1;
 
-        exports = function (val)
+        function exports(val)
         {
             if (!has(val, 'length')) return false;
 
             var len = val.length;
 
-            return isNum(len) && len >= 0 && len <= MAX_ARR_IDX;
-        };
+            return isNum(len) && len >= 0 && len <= MAX_ARR_IDX && !isFn(val);
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ each ------------------------------ */
 
@@ -493,19 +703,25 @@
          * ```
          */
 
+        /* dependencies
+         * isArrLike keys optimizeCb 
+         */
+
         function exports(obj, iteratee, ctx)
         {
+            iteratee = optimizeCb(iteratee, ctx);
+
             var i, len;
 
             if (isArrLike(obj))
             {
-                for (i = 0, len = obj.length; i < len; i++) iteratee.call(ctx, obj[i], i, obj);
+                for (i = 0, len = obj.length; i < len; i++) iteratee(obj[i], i, obj);
             } else
             {
                 var _keys = keys(obj);
                 for (i = 0, len = _keys.length; i < len; i++)
                 {
-                    iteratee.call(ctx, obj[_keys[i]], _keys[i], obj);
+                    iteratee(obj[_keys[i]], _keys[i], obj);
                 }
             }
 
@@ -526,6 +742,10 @@
          * |keysFn  |function|Function to get object keys   |
          * |defaults|boolean |No override when set to true  |
          * |return  |function|Result function, extend...    |
+         */
+
+        /* dependencies
+         * isUndef each 
          */
 
         function exports(keysFn, defaults)
@@ -560,12 +780,16 @@
          * |Name  |Type  |Desc              |
          * |------|------|------------------|
          * |obj   |object|Destination object|
-         * |*src  |object|Sources objects   |
+         * |...src|object|Sources objects   |
          * |return|object|Destination object|
          *
          * ```javascript
          * extend({name: 'RedHood'}, {age: 24}); // -> {name: 'RedHood', age: 24}
          * ```
+         */
+
+        /* dependencies
+         * createAssigner allKeys 
          */
 
         exports = createAssigner(allKeys);
@@ -590,6 +814,10 @@
          * ```
          */
 
+        /* dependencies
+         * keys createAssigner 
+         */
+
         exports = createAssigner(keys);
 
         return exports;
@@ -599,7 +827,7 @@
 
     var values = _.values = (function ()
     {
-        /* Creates an array of the own enumerable property values of object.
+        /* Create an array of the own enumerable property values of object.
          *
          * |Name  |Type  |Desc                    |
          * |------|------|------------------------|
@@ -609,6 +837,10 @@
          * ```javascript
          * values({one: 1, two: 2}); // -> [1, 2]
          * ```
+         */
+
+        /* dependencies
+         * each 
          */
 
         function exports(obj)
@@ -625,69 +857,31 @@
 
     /* ------------------------------ contain ------------------------------ */
 
-    var contain = _.contain = (function (exports)
+    var contain = _.contain = (function ()
     {
-        /* TODO
+        /* Check if the value is present in the list.
+         *
+         * |Name  |Type        |Desc                                |
+         * |------|------------|------------------------------------|
+         * |array |array object|Target list                         |
+         * |value |*           |Value to check                      |
+         * |return|boolean     |True if value is present in the list|
+         *
+         * ```javascript
+         * contain([1, 2, 3], 1); // -> true
+         * contain({a: 1, b: 2}, 1); // -> true
+         * ```
          */
 
-        exports = function (arr, val)
+        /* dependencies
+         * idxOf isArrLike values 
+         */
+
+        function exports(arr, val)
         {
             if (!isArrLike(arr)) arr = values(arr);
 
             return idxOf(arr, val) >= 0;
-        };
-
-        return exports;
-    })({});
-
-    /* ------------------------------ isStr ------------------------------ */
-
-    var isStr = _.isStr = (function ()
-    {
-        /* Check if value is a string primitive.
-         *
-         * |Name  |Type   |Desc                               |
-         * |------|-------|-----------------------------------|
-         * |val   |*      |Value to check                     |
-         * |return|boolean|True if value is a string primitive|
-         *
-         * ```javascript
-         * isStr('eris'); // -> true
-         * ```
-         */
-
-        function exports(val)
-        {
-            return objToStr(val) === '[object String]';
-        }
-
-        return exports;
-    })();
-
-    /* ------------------------------ isFn ------------------------------ */
-
-    var isFn = _.isFn = (function ()
-    {
-        /* Check if value is a function.
-         *
-         * |Name  |Type   |Desc                       |
-         * |------|-------|---------------------------|
-         * |val   |*      |Value to check             |
-         * |return|boolean|True if value is a function|
-         *
-         * Generator function is also classified as true.
-         *
-         * ```javascript
-         * isFn(function() {}); // -> true
-         * isFn(function*() {}); // -> true
-         * ```
-         */
-
-        function exports(val)
-        {
-            var objStr = objToStr(val);
-
-            return objStr === '[object Function]' || objStr === '[object GeneratorFunction]';
         }
 
         return exports;
@@ -708,6 +902,10 @@
          * ```javascript
          * isMatch({a: 1, b: 2}, {a: 1}); // -> true
          * ```
+         */
+
+        /* dependencies
+         * keys 
          */
 
         function exports(obj, src)
@@ -735,7 +933,24 @@
 
     var matcher = _.matcher = (function ()
     {
-        /* TODO
+        /* Return a predicate function that checks if attrs are contained in an object.
+         *
+         * |Name  |Type    |Desc                              |
+         * |------|--------|----------------------------------|
+         * |attrs |object  |Object of property values to match|
+         * |return|function|New predicate function            |
+         *
+         * ```javascript
+         * var objects = [
+         *     {a: 1, b: 2, c: 3 },
+         *     {a: 4, b: 5, c: 6 }
+         * ];
+         * filter(objects, matcher({a: 4, c: 6 })); // -> [{a: 4, b: 5, c: 6 }]
+         * ```
+         */
+
+        /* dependencies
+         * extendOwn isMatch 
          */
 
         function exports(attrs)
@@ -751,47 +966,15 @@
         return exports;
     })();
 
-    /* ------------------------------ optimizeCb ------------------------------ */
-
-    var optimizeCb = _.optimizeCb = (function ()
-    {
-        /* TODO
-         */
-
-        function exports(func, ctx, argCount)
-        {
-            if (isUndef(ctx)) return func;
-
-            switch (argCount == null ? 3 : argCount)
-            {
-                case 1: return function (val)
-                {
-                    return func.call(ctx, val);
-                };
-                case 3: return function (val, idx, collection)
-                {
-                    return func.call(ctx, val, idx, collection);
-                };
-                case 4: return function (accumulator, val, idx, collection)
-                {
-                    return func.call(ctx, accumulator, val, idx, collection);
-                }
-            }
-
-            return function ()
-            {
-                return func.apply(ctx, arguments);
-            };
-        }
-
-        return exports;
-    })();
-
     /* ------------------------------ safeCb ------------------------------ */
 
     var safeCb = _.safeCb = (function (exports)
     {
-        /* Create callback based on input value. TODO
+        /* Create callback based on input value.
+         */
+
+        /* dependencies
+         * isFn isObj optimizeCb matcher identity 
          */
 
         exports = function (val, ctx, argCount)
@@ -832,6 +1015,10 @@
          * ```
          */
 
+        /* dependencies
+         * safeCb keys isArrLike 
+         */
+
         function exports(obj, iteratee, ctx)
         {
             iteratee = safeCb(iteratee, ctx);
@@ -866,9 +1053,13 @@
          * ```javascript
          * toArr({a: 1, b: 2}); // -> [{a: 1, b: 2}]
          * toArr('abc'); // -> ['abc']
-         * toArr(1); // -> []
+         * toArr(1); // -> [1]
          * toArr(null); // -> []
          * ```
+         */
+
+        /* dependencies
+         * isArrLike map isArr isStr 
          */
 
         function exports(val)
@@ -899,33 +1090,33 @@
          *
          * ```javascript
          * var People = Class({
-         *     initialize: function (name, age)
+         *     initialize: function People(name, age)
          *     {
          *         this.name = name;
          *         this.age = age;
          *     },
          *     introduce: function ()
          *     {
-         *         return 'I am ' + this.name + ', ' + this.age + ' years old.'.
+         *         return 'I am ' + this.name + ', ' + this.age + ' years old.';
          *     }
          * });
          *
          * var Student = People.extend({
-         *     initialize: function (name, age, school)
+         *     initialize: function Student(name, age, school)
          *     {
-         *         this.callSuper('initialize', name, age);
+         *         this.callSuper(People, 'initialize', arguments);
          *
-         *         this.school = school.
+         *         this.school = school;
          *     },
          *     introduce: function ()
          *     {
-         *         return this.callSuper('introduce') + '\n I study at ' + this.school + '.'.
+         *         return this.callSuper(People, 'introduce') + '\n I study at ' + this.school + '.';
          *     }
          * }, {
          *     is: function (obj)
          *     {
          *         return obj instanceof Student;
-          *    }
+         *     }
          * });
          *
          * var a = new Student('allen', 17, 'Hogwarts');
@@ -934,37 +1125,29 @@
          * ```
          */
 
+        /* dependencies
+         * extend toArr inherits has safeGet 
+         */
+
         function exports(methods, statics)
         {
             return Base.extend(methods, statics);
         }
 
-        var regCallSuper = /callSuper/;
-
         function makeClass(parent, methods, statics)
         {
             statics = statics || {};
+            var className = methods.className || safeGet(methods, 'initialize.name') || '';
+            delete methods.className;
 
-            var ctor = function ()
-            {
-                var args = toArr(arguments);
-
-                if (has(ctor.prototype, 'initialize') &&
-                    !regCallSuper.test(this.initialize.toString()) &&
-                    this.callSuper)
-                {
-                    args.unshift('initialize');
-                    this.callSuper.apply(this, args);
-                    args.shift();
-                }
-
-                return this.initialize
-                       ? this.initialize.apply(this, args) || this
-                       : this;
-            };
+            var ctor = new Function('toArr', 'return function ' + className + '()' + 
+            '{' +
+                'var args = toArr(arguments);' +
+                'return this.initialize ? this.initialize.apply(this, args) || this : this;' +
+            '};')(toArr);
 
             inherits(ctor, parent);
-            ctor.superclass = ctor.prototype.superclass = parent;
+            ctor.prototype.constructor = ctor;
 
             ctor.extend = function (methods, statics)
             {
@@ -972,7 +1155,7 @@
             };
             ctor.inherits = function (Class)
             {
-                inherits(Class, ctor);
+                inherits(ctor, Class);
             };
             ctor.methods = function (methods)
             {
@@ -992,17 +1175,15 @@
 
         var Base = exports.Base = makeClass(Object, {
             className: 'Base',
-            callSuper: function (name)
+            callSuper: function (parent, name, args)
             {
-                var superMethod = this.superclass.prototype[name];
+                var superMethod = parent.prototype[name];
 
-                if (!superMethod) return;
-
-                return superMethod.apply(this, toArr(arguments).slice(1));
+                return superMethod.apply(this, args);
             },
             toString: function ()
             {
-                return this.className;
+                return this.constructor.name;
             }
         });
 
@@ -1013,20 +1194,42 @@
 
     var Select = _.Select = (function (exports)
     {
-        /* jQuery like dom manipulator. TODO
+        /* Simple wrapper of querySelectorAll to make dom selection easier.
+         *
+         * ### constructor
+         *
+         * |Name    |Type  |Desc               |
+         * |--------|------|-------------------|
+         * |selector|string|Dom selector string|
+         *
+         * ### find
+         *
+         * Get desdendants of current matched elements.
+         *
+         * |Name    |Type  |Desc               |
+         * |--------|------|-------------------|
+         * |selector|string|Dom selector string|
+         *
+         * ### each
+         *
+         * Iterate over matched elements.
+         *
+         * |Name|Type    |Desc                                |
+         * |----|--------|------------------------------------|
+         * |fn  |function|Function to execute for each element|
+         *
+         * ```javascript
+         * var $test = new Select('#test');
+         * $test.find('.test').each(function (idx, element)
+         * {
+         *     // Manipulate dom nodes
+         * });
+         * ```
          */
 
-        function mergeArr(first, second)
-        {
-            var len = second.length,
-                i = first.length;
-
-            for (var j = 0; j < len; j++) first[i++] = second[j];
-
-            first.length = i;
-
-            return first;
-        }
+        /* dependencies
+         * Class isStr each 
+         */
 
         exports = Class({
             className: 'Select',
@@ -1068,45 +1271,106 @@
 
         var rootSelect = new exports(document);
 
+        function mergeArr(first, second)
+        {
+            var len = second.length,
+                i = first.length;
+
+            for (var j = 0; j < len; j++) first[i++] = second[j];
+
+            first.length = i;
+
+            return first;
+        }
+
         return exports;
     })({});
 
-    /* ------------------------------ $safeNodes ------------------------------ */
+    /* ------------------------------ $safeEls ------------------------------ */
 
-    var $safeNodes = _.$safeNodes = (function (exports)
+    var $safeEls = _.$safeEls = (function ()
     {
-        /* TODO
+        /* Convert value into an array, if it's a string, do querySelector.
+         *
+         * |Name  |Type                |Desc             |
+         * |------|--------------------|-----------------|
+         * |value |element array string|Value to convert |
+         * |return|array               |Array of elements|
+         *
+         * ```javascript
+         * $safeEls('.test'); // -> Array of elements with test class
+         * ```
          */
 
-        exports = function (nodes)
-        {
-            if (isStr(nodes)) return new Select(nodes);
+        /* dependencies
+         * isStr toArr Select 
+         */
 
-            return toArr(nodes);
-        };
+        function exports(val)
+        {
+            return toArr(isStr(val) ? new Select(val) : val);
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ $attr ------------------------------ */
 
     var $attr = _.$attr = (function ()
     {
-        /* Attributes manipulation. TODO
+        /* Element attribute manipulation.
+         *
+         * Get the value of an attribute for the first element in the set of matched elements.
+         *
+         * |Name   |Type                |Desc                            |
+         * |-------|--------------------|--------------------------------|
+         * |element|string array element|Elements to manipulate          |
+         * |name   |string              |Attribute name                  |
+         * |return |string              |Attribute value of first element|
+         *
+         * Set one or more attributes for the set of matched elements.
+         *
+         * |Name   |Type                |Desc                  |
+         * |-------|--------------------|----------------------|
+         * |element|string array element|Elements to manipulate|
+         * |name   |string              |Attribute name        |
+         * |value  |string              |Attribute value       |
+         *
+         * |Name      |Type                |Desc                                  |
+         * |----------|--------------------|--------------------------------------|
+         * |element   |string array element|Elements to manipulate                |
+         * |attributes|object              |Object of attribute-value pairs to set|
+         *
+         * ### remove
+         *
+         * Remove an attribute from each element in the set of matched elements.
+         *
+         * |Name   |Type                |Desc                  |
+         * |-------|--------------------|----------------------|
+         * |element|string array element|Elements to manipulate|
+         * |name   |string              |Attribute name        |
          *
          * ```javascript
          * $attr('#test', 'attr1', 'test');
          * $attr('#test', 'attr1'); // -> test
          * $attr.remove('#test', 'attr1');
+         * $attr('#test', {
+         *     'attr1': 'test',
+         *     'attr2': 'test'
+         * });
          * ```
          */
 
-        function exports(nodes, name, val)
+        /* dependencies
+         * toArr isObj isStr each isUndef $safeEls 
+         */
+
+        function exports(els, name, val)
         {
-            nodes = $safeNodes(nodes);
+            els = $safeEls(els);
 
             var isGetter = isUndef(val) && isStr(name);
-            if (isGetter) return getAttr(nodes[0], name);
+            if (isGetter) return getAttr(els[0], name);
 
             var attrs = name;
             if (!isObj(attrs))
@@ -1115,15 +1379,15 @@
                 attrs[name] = val;
             }
 
-            setAttr(nodes, attrs);
+            setAttr(els, attrs);
         }
 
-        exports.remove = function (nodes, names)
+        exports.remove = function (els, names)
         {
-            nodes = $safeNodes(nodes);
+            els = $safeEls(els);
             names = toArr(names);
 
-            each(nodes, function (node)
+            each(els, function (node)
             {
                 each(names, function (name)
                 {
@@ -1132,18 +1396,18 @@
             });
         };
 
-        function getAttr(node, name)
+        function getAttr(el, name)
         {
-            return node.getAttribute(name);
+            return el.getAttribute(name);
         }
 
-        function setAttr(nodes, attrs)
+        function setAttr(els, attrs)
         {
-            each(nodes, function (node)
+            each(els, function (el)
             {
                 each(attrs, function (val, name)
                 {
-                    node.setAttribute(name, val);
+                    el.setAttribute(name, val);
                 });
             })
         }
@@ -1155,11 +1419,15 @@
 
     var $data = _.$data = (function ()
     {
-        /* Data manipulation TODO
+        /* Wrapper of $attr, adds data- prefix to keys.
          *
          * ```javascript
          * $data('#test', 'attr1', 'eustia');
          * ```
+         */
+
+        /* dependencies
+         * $attr isStr isObj each 
          */
 
         function exports(nodes, name, val)
@@ -1186,19 +1454,46 @@
 
     var $css = _.$css = (function ()
     {
-        /* Css manipulation. TODO
+        /* Element css manipulation.
+         *
+         * Get the computed style properties for the first element in the set of matched elements.
+         *
+         * |Name   |Type                |Desc                      |
+         * |-------|--------------------|--------------------------|
+         * |element|string array element|Elements to manipulate    |
+         * |name   |string              |Property name             |
+         * |return |string              |Css value of first element|
+         *
+         * Set one or more CSS properties for the set of matched elements.
+         *
+         * |Name   |Type                |Desc                  |
+         * |-------|--------------------|----------------------|
+         * |element|string array element|Elements to manipulate|
+         * |name   |string              |Property name         |
+         * |value  |string              |Css value             |
+         *
+         * |Name      |Type                |Desc                            |
+         * |----------|--------------------|--------------------------------|
+         * |element   |string array element|Elements to manipulate          |
+         * |properties|object              |Object of css-value pairs to set|
          *
          * ```javascript
          * $css('#test', {
          *     'color': '#fff',
          *     'background': 'black'
          * });
+         * $css('#test', 'display', 'block');
+         * $css('#test', 'color'); // -> #fff
          * ```
+         */
+
+        /* dependencies
+         * isStr isObj camelCase kebabCase isUndef contain isNum $safeEls startWith 
          */
 
         function exports(nodes, name, val)
         {
-            nodes = $safeNodes(nodes);
+            nodes = $safeEls(nodes);
 
             var isGetter = isUndef(val) && isStr(name);
             if (isGetter) return getCss(nodes[0], name);
@@ -1225,7 +1520,8 @@
                 var cssText = ';';
                 each(css, function (val, key)
                 {
-                    cssText += kebabCase(key) + ':' + addPx(key, val) + ';';
+                    key = dasherize(key);
+                    cssText += key + ':' + addPx(key, val) + ';';
                 });
                 node.style.cssText += cssText;
             });
@@ -1248,6 +1544,14 @@
             return needPx ? val + 'px' : val;
         }
 
+        function dasherize(str) 
+        {
+            // -webkit- -o- 
+            if (startWith(str, '-')) return str;
+
+            return kebabCase(str);
+        }
+
         return exports;
     })();
 
@@ -1255,11 +1559,44 @@
 
     var $insert = _.$insert = (function (exports)
     {
-        /* Insert html on different position. TODO
+        /* Insert html on different position.
+         *
+         * ### before
+         *
+         * Insert content before elements.
+         *
+         * ### after
+         *
+         * Insert content after elements.
+         *
+         * ### prepend
+         *
+         * Insert content to the beginning of elements.
+         *
+         * ### append
+         *
+         * Insert content to the end of elements.
+         *
+         * |Name   |Type                |Desc                  |
+         * |-------|--------------------|----------------------|
+         * |element|string array element|Elements to manipulate|
+         * |content|string              |Html strings          |
          *
          * ```javascript
-         * $insert.append('#test', '<div>test</div>');
+         * // <div id="test"><div class="mark"></div></div>
+         * $insert.before('#test', '<div>eris</div>');
+         * // -> <div>eris</div><div id="test"><div class="mark"></div></div>
+         * $insert.after('#test', '<div>eris</div>');
+         * // -> <div id="test"><div class="mark"></div></div><div>eris</div>
+         * $insert.prepend('#test', '<div>eris</div>');
+         * // -> <div id="test"><div>eris</div><div class="mark"></div></div>
+         * $insert.append('#test', '<div>eris</div>');
+         * // -> <div id="test"><div class="mark"></div><div>eris</div></div>
          * ```
+         */
+
+        /* dependencies
+         * each $safeEls 
          */
 
         exports = {
@@ -1273,7 +1610,7 @@
         {
             return function (nodes, val)
             {
-                nodes = $safeNodes(nodes);
+                nodes = $safeEls(nodes);
 
                 each(nodes, function (node)
                 {
@@ -1287,35 +1624,72 @@
 
     /* ------------------------------ $offset ------------------------------ */
 
-    var $offset = _.$offset = (function (exports)
+    var $offset = _.$offset = (function ()
     {
-        /* TODO
+        /* Get the position of the element in document.
+         *
+         * |Name   |Type                |Desc                  |
+         * |-------|--------------------|----------------------|
+         * |element|string array element|Elements to get offset|
+         *
+         * ```javascript
+         * $offset('#test'); // -> {left: 0, top: 0, width: 0, height: 0}
+         * ```
          */
 
-        exports = function (nodes)
+        /* dependencies
+         * $safeEls 
+         */
+
+        function exports(els)
         {
-            nodes = $safeNodes(nodes);
+            els = $safeEls(els);
 
-            var node = nodes[0];
+            var el = els[0];
 
-            var clientRect = node.getBoundingClientRect();
+            var clientRect = el.getBoundingClientRect();
 
             return {
                 left: clientRect.left + window.pageXOffset,
-                top : clientRect.top + window.pageYOffset,
-                width : Math.round(clientRect.width),
+                top: clientRect.top + window.pageYOffset,
+                width: Math.round(clientRect.width),
                 height: Math.round(clientRect.height)
             };
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ $property ------------------------------ */
 
     var $property = _.$property = (function (exports)
     {
-        /* TODO
+        /* Element property html, text, val getter and setter.
+         *
+         * ### html
+         *
+         * Get the HTML contents of the first element in the set of matched elements or
+         * set the HTML contents of every matched element.
+         *
+         * ### text
+         *
+         * Get the combined text contents of each element in the set of matched
+         * elements, including their descendants, or set the text contents of the
+         * matched elements.
+         *
+         * ### val
+         *
+         * Get the current value of the first element in the set of matched elements or
+         * set the value of every matched element.
+         *
+         * ```javascript
+         * $property.html('#test', 'eris');
+         * $property.html('#test'); // -> eris
+         * ```
+         */
+
+        /* dependencies
+         * isUndef each $safeEls 
          */
 
         exports = {
@@ -1328,7 +1702,7 @@
         {
             return function (nodes, val)
             {
-                nodes = $safeNodes(nodes);
+                nodes = $safeEls(nodes);
 
                 if (isUndef(val)) return nodes[0][name];
 
@@ -1344,72 +1718,92 @@
 
     /* ------------------------------ $remove ------------------------------ */
 
-    var $remove = _.$remove = (function (exports)
+    var $remove = _.$remove = (function ()
     {
-        /* TODO
+        /* Remove the set of matched elements from the DOM.
+         *
+         * |Name   |Type                |Desc              |
+         * |-------|--------------------|------------------|
+         * |element|string array element|Elements to delete|
+         *
+         * ```javascript
+         * $remove('#test');
+         * ```
          */
 
-        exports = function (nodes)
+        /* dependencies
+         * each $safeEls 
+         */
+
+        function exports(els)
         {
-            nodes = $safeNodes(nodes);
+            els = $safeEls(els);
 
-            each(nodes, function (node)
+            each(els, function (el)
             {
-                var parent = node.parentNode;
+                var parent = el.parentNode;
 
-                if (parent) parent.removeChild(node);
+                if (parent) parent.removeChild(el);
             });
-        };
+        }
 
         return exports;
-    })({});
+    })();
 
     /* ------------------------------ $show ------------------------------ */
 
     var $show = _.$show = (function ()
     {
-        /* Show elements. TODO
+        /* Show elements.
+         *
+         * |Name   |Type                |Desc            |
+         * |-------|--------------------|----------------|
+         * |element|string array element|Elements to show|
          *
          * ```javascript
          * $show('#test');
          * ```
          */
 
-        function exports(nodes)
-        {
-            nodes = $safeNodes(nodes);
+        /* dependencies
+         * each $safeEls 
+         */
 
-            each(nodes, function (node)
+        function exports(els)
+        {
+            els = $safeEls(els);
+
+            each(els, function (el)
             {
-                if (isHidden(node))
+                if (isHidden(el))
                 {
-                    node.style.display = getDefDisplay(node.nodeName);
+                    el.style.display = getDefDisplay(el.nodeName);
                 }
             });
         }
 
-        function isHidden(node)
+        function isHidden(el)
         {
-            return getComputedStyle(node, '').getPropertyValue('display') == 'none';
+            return getComputedStyle(el, '').getPropertyValue('display') == 'none';
         }
 
         var elDisplay = {};
 
-        function getDefDisplay(nodeName)
+        function getDefDisplay(elName)
         {
             var el, display;
 
-            if (!elDisplay[nodeName])
+            if (!elDisplay[elName])
             {
-                el = document.createElement(nodeName);
+                el = document.createElement(elName);
                 document.documentElement.appendChild(el);
-                display = getComputedStyle(el, '').getPropertyValue("display");
+                display = getComputedStyle(el, '').getPropertyValue('display');
                 el.parentNode.removeChild(el);
-                display == "none" && (display = "block");
-                elDisplay[nodeName] = display;
+                display == 'none' && (display = 'block');
+                elDisplay[elName] = display;
             }
 
-            return elDisplay[nodeName];
+            return elDisplay[elName];
         }
 
         return exports;
@@ -1419,7 +1813,36 @@
 
     var delegate = _.delegate = (function (exports)
     {
-        /* TODO
+        /* Event delegation.
+         *
+         * ### add
+         *
+         * Add event delegation.
+         *
+         * |Name    |Type    |Desc          |
+         * |--------|--------|--------------|
+         * |el      |element |Parent element|
+         * |type    |string  |Event type    |
+         * |selector|string  |Match selector|
+         * |cb      |function|Event callback|
+         *
+         * ### remove
+         *
+         * Remove event delegation.
+         *
+         * ```javascript
+         * var container = document.getElementById('container');
+         * function clickHandler()
+         * {
+         *     // Do something...
+         * }
+         * delegate.add(container, 'click', '.children', clickHandler);
+         * delegate.remove(container, 'click', '.children', clickHandler);
+         * ```
+         */
+
+        /* dependencies
+         * Class contain 
          */
 
         function retTrue()  { return true }
@@ -1431,7 +1854,7 @@
                 handler,
                 handlerQueue = formatHandlers.call(this, e, handlers);
 
-            e = new delegate.Event(e);
+            e = new exports.Event(e);
 
             var i = 0, j, matched, ret;
 
@@ -1455,7 +1878,7 @@
         function formatHandlers(e, handlers)
         {
             var current = e.target,
-                ret     = [],
+                ret = [],
                 delegateCount = handlers.delegateCount,
                 selector, matches, handler, i;
 
@@ -1494,7 +1917,7 @@
             {
                 var handler = {
                         selector: selector,
-                        handler : fn
+                        handler: fn
                     },
                     handlers;
 
@@ -1575,14 +1998,20 @@
 
     var $event = _.$event = (function (exports)
     {
-        /* bind events to certain dom elements. TODO
+        /* bind events to certain dom elements.
          *
          * ```javascript
-         * event.on('#test', 'click', function ()
+         * function clickHandler()
          * {
-         *     // ...
-         * });
+         *     // Do something...
+         * }
+         * $event.on('#test', 'click', clickHandler);
+         * $event.off('#test', 'click', clickHandler);
          * ```
+         */
+
+        /* dependencies
+         * delegate isUndef $safeEls 
          */
 
         exports = {
@@ -1594,7 +2023,7 @@
         {
             return function (nodes, event, selector, handler)
             {
-                nodes = $safeNodes(nodes);
+                nodes = $safeEls(nodes);
 
                 if (isUndef(handler))
                 {
@@ -1633,6 +2062,10 @@
          * ```
          */
 
+        /* dependencies
+         * safeCb isArrLike keys 
+         */
+
         function exports(obj, predicate, ctx)
         {
             predicate = safeCb(predicate, ctx);
@@ -1656,10 +2089,48 @@
 
     var $class = _.$class = (function (exports)
     {
-        /* Class manipulation. TODO
+        /* Element class manipulations.
+         *
+         * ### add
+         *
+         * Add the specified class(es) to each element in the set of matched elements.
+         *
+         * |Name   |Type                |Desc                  |
+         * |-------|--------------------|----------------------|
+         * |element|string array element|Elements to manipulate|
+         * |names  |string array        |Classes to add        |
+         *
+         * ### has
+         *
+         * Determine whether any of the matched elements are assigned the given class.
+         *
+         * |Name   |Type                |Desc                                 |
+         * |-------|--------------------|-------------------------------------|
+         * |element|string array element|Elements to manipulate               |
+         * |name   |string              |Class name                           |
+         * |return |boolean             |True if elements has given class name|
+         *
+         * ### toggle
+         *
+         * Add or remove one or more classes from each element in the set of matched elements, depending on either the class's presence or the value of the state argument.
+         *
+         * |Name   |Type                |Desc                  |
+         * |-------|--------------------|----------------------|
+         * |element|string array element|Elements to manipulate|
+         * |name   |string              |Class name to toggle  |
+         *
+         * ### remove
+         *
+         * Remove a single class, multiple classes, or all classes from each element in the set of matched elements.
+         *
+         * |Name   |Type                |Desc                  |
+         * |-------|--------------------|----------------------|
+         * |element|string array element|Elements to manipulate|
+         * |names  |string              |Class names to remove |
          *
          * ```javascript
          * $class.add('#test', 'class1');
+         * $class.add('#test', ['class1', 'class2']);
          * $class.has('#test', 'class1'); // -> true
          * $class.remove('#test', 'class1');
          * $class.has('#test', 'class1'); // -> false
@@ -1668,74 +2139,99 @@
          * ```
          */
 
-        exports = {
-            add: function (nodes, name)
-            {
-                nodes = $safeNodes(nodes);
-                var names = toArr(name);
+        /* dependencies
+         * toArr some $safeEls isStr 
+         */
 
-                each(nodes, function (node)
+        exports = {
+            add: function (els, name)
+            {
+                els = $safeEls(els);
+                var names = safeName(name);
+
+                each(els, function (el)
                 {
                     var classList = [];
 
                     each(names, function (name)
                     {
-                        if (!exports.has(node, name)) classList.push(name);
+                        if (!exports.has(el, name)) classList.push(name);
                     });
 
-                    if (classList.length !== 0) node.className += ' ' + classList.join(' ');
+                    if (classList.length !== 0) el.className += ' ' + classList.join(' ');
                 });
             },
-            has: function (nodes, name)
+            has: function (els, name)
             {
-                nodes = $safeNodes(nodes);
+                els = $safeEls(els);
 
                 var regName = new RegExp('(^|\\s)' + name + '(\\s|$)');
 
-                return some(nodes, function (node)
+                return some(els, function (el)
                 {
-                    return regName.test(node.className);
+                    return regName.test(el.className);
                 });
             },
-            toggle: function (nodes, name)
+            toggle: function (els, name)
             {
-                nodes = $safeNodes(nodes);
+                els = $safeEls(els);
 
-                each(nodes, function (node)
+                each(els, function (el)
                 {
-                    if (!exports.has(node, name)) return exports.add(node, name);
+                    if (!exports.has(el, name)) return exports.add(el, name);
 
-                    exports.remove(node, name);
+                    exports.remove(el, name);
                 });
             },
-            remove: function (nodes, name)
+            remove: function (els, name)
             {
-                nodes = $safeNodes(nodes);
-                var names = toArr(name);
+                els = $safeEls(els);
+                var names = safeName(name);
 
-                each(nodes, function (node)
+                each(els, function (el)
                 {
                     each(names, function (name)
                     {
-                        node.classList.remove(name);
+                        el.classList.remove(name);
                     });
                 });
             }
         };
+
+        function safeName(name)
+        {
+            return isStr(name) ? name.split(/\s+/) : toArr(name);
+        }
 
         return exports;
     })({});
 
     /* ------------------------------ $ ------------------------------ */
 
-    var $ = _.$ = (function ()
+    _.$ = (function ()
     {
-        /* jQuery like style dom manipulator. TODO
+        /* jQuery like style dom manipulator.
+         *
+         * ### Available methods
+         *
+         * offset, hide, show, first, last, get, eq, on, off, html, text, val, css, attr,
+         * data, rmAttr, remove, addClass, rmClass, toggleClass, hasClass, append, prepend,
+         * before, after
          *
          * ```javascript
          * var $btn = $('#btn');
          * $btn.html('eustia');
+         * $btn.addClass('btn');
+         * $btn.show();
+         * $btn.on('click', function ()
+         * {
+         *     // Do something...
+         * });
          * ```
+         */
+
+        /* dependencies
+         * Select $offset $show $css $attr $property last $remove $data $event $class $insert isUndef isStr 
          */
 
         function exports(selector)
@@ -1760,10 +2256,10 @@
             },
             first: function ()
             {
-                return $(this[0]);
+                return exports(this[0]);
             },
             last: function () {
-                return $(last(this));
+                return exports(last(this));
             },
             get: function (idx)
             {
@@ -1771,7 +2267,7 @@
             },
             eq: function (idx)
             {
-                return $(this[idx]);
+                return exports(this[idx]);
             },
             on: function (event, selector, handler)
             {
@@ -1869,7 +2365,7 @@
             },
             parent: function ()
             {
-                return $(this[0].parentNode);
+                return exports(this[0].parentNode);
             },
             append: function (val)
             {
