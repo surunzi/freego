@@ -30,7 +30,6 @@ module.exports = function (options)
 
         this.logger.info(`client ip: ${this.ip}`);
 
-        this.logger.info(proxy);
         this.target = getTarget(this);
 
         yield next;

@@ -34,6 +34,19 @@
             word-break: break-all;
             overflow-x: auto;
         }
+        .clear-btn {
+            height: 30px;
+            margin: 10px 0;
+            padding: 4px;
+            background-color: #d55;
+        }
+        .clear-btn a {
+            display: block;
+            text-decoration: none;
+            text-align: center;
+            color: #fff;
+            line-height: 30px;
+        }
     </style>
 </head>
 <body>
@@ -43,5 +56,30 @@
             <pre><%- stack %></pre>
         </div>
     </div>
+    <div class="clear-btn"><a href="javascript:;" id="clear-cookie">Clear</a></div>
+    <div class="clear-btn"><a href="/free_go_proxy">Target List</a></div>
+    <script>
+        document.getElementById('clear-cookie').onclick = function () {
+            var hostArray = location.host.split('.')
+            var cookie = 'free_go_proxy=;path={{target.path}};expires=' + getExpires(-1);
+
+            document.cookie = cookie
+
+            while (hostArray.length > 1) {
+                var currentDomain = hostArray.join('.');
+                document.cookie = cookie + ';domain=' + currentDomain;
+                hostArray.shift();
+            }
+
+            location.reload();
+        }
+        function getExpires(date)
+        {
+            var expires = new Date();
+            expires.setMilliseconds(expires.getMilliseconds() + date * 864e+5);
+
+            return expires.toUTCString();
+        }
+    </script>
 </body>
 </html>
