@@ -106,7 +106,7 @@
                 </thead>
                 <tbody>
                     {{#each target.root.target}}
-                        <tr id="target_{{name}}" ontouchstart>
+                        <tr id="target_{{value}}" ontouchstart>
                             <td>{{name}}</td>
                         </tr>
                     {{/each}}
@@ -137,14 +137,14 @@
                 function init(num)
                 {
                     var isEnable = false;
-                    var name = targets[num].name;
+                    var value = targets[num].value;
 
-                    if (document.cookie.indexOf('free_go_proxy=' + name) > -1) isEnable = true;
+                    if (document.cookie.indexOf('free_go_proxy=' + value) > -1) isEnable = true;
 
-                    var target = document.getElementById('target_' + name);
+                    var target = document.getElementById('target_' + value);
                     if (isEnable) target.className += ' active';
 
-                    var cookie = 'free_go_proxy=' + name +';{{#if target.domain}}domain={{target.domain}};{{/if}}path={{target.path}};expires=';
+                    var cookie = 'free_go_proxy=' + value +';{{#if target.domain}}domain={{target.domain}};{{/if}}path={{target.path}};expires=';
 
                     target.onclick = function ()
                     {

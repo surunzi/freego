@@ -52,9 +52,9 @@
 
             util.each(this._target, function (val, idx)
             {
-                var activeClass = active === val.name ? 'active' : '';
+                var activeClass = active === val.value ? 'active' : '';
 
-                tpl += '<tr class="eruda-proxy ' + activeClass + '" data-idx="' + idx + '" data-name="' + val.name + '" ontouchstart>' +
+                tpl += '<tr class="eruda-proxy ' + activeClass + '" data-idx="' + idx + '" data-name="' + val.value + '" ontouchstart>' +
                     '<td>' + val.name + '</td><td>' + val.ip + ':' + val.port + '</td>' +
                     '</tr>'
             });

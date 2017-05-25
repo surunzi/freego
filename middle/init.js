@@ -39,7 +39,7 @@ module.exports = function (options)
     {
         var href = ctx.href,
             cookies = ctx.cookies,
-            targetName = (cookies.get('free_go_proxy') || '');
+            targetValue = (cookies.get('free_go_proxy') || '');
 
         for (var i = 0; i < proxyLen; i++)
         {
@@ -53,7 +53,7 @@ module.exports = function (options)
         var target = p.target[0];
 
         util.each(p.target, function (t) {
-            if (t.name == targetName) {
+            if (t.value == targetValue) {
                 target = t;
                 return false;
             }
