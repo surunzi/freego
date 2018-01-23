@@ -36,6 +36,6 @@
     "socket.io": "^1.4.8"
   },
   "devDependencies": {
-    "eruda": "^1.1.2"
+    "eruda": "^1.4.1"
   }
 }
