@@ -26,7 +26,11 @@ module.exports = function (options)
         this.id = guid();
 
         this.logger = logger.create(this.id, userId);
-        this.logger.info(`request url: ${decodeURIComponent(this.href)}`);
+        try {
+            this.logger.info(`request url: ${decodeURIComponent(this.href)}`);
+        } catch (e) {
+            this.logger.info(`request url: ${this.href}`);
+        }
 
         this.logger.info(`client ip: ${this.ip}`);
 
